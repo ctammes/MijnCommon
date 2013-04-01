@@ -2,6 +2,7 @@ package nl.ctammes.common;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.net.InetAddress;
 import java.util.regex.Pattern;
 
 /**
@@ -31,6 +32,29 @@ public class Diversen {
         });
         return files;
     }
+
+    /**
+     * Geef de hostname
+     * @return
+     */
+    public static String geefHostnaam() {
+        try {
+            InetAddress addr = InetAddress.getLocalHost();
+            byte[] ipAddr = addr.getAddress();
+            return addr.getHostName();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Geef de usernaam
+     * @return
+     */
+    public static String geefUsernaam() {
+        return System.getProperty("user.name");
+    }
+
 
 
 }
