@@ -112,8 +112,8 @@ public class Excel {
     public int leesIntegerCel(int rij, int kolom) {
         String inhoud = leesCel(rij, kolom);
         int waarde = 0;
-        if (inhoud != null) {
-            waarde = Integer.parseInt(leesCel(rij, kolom).split("\\.")[0]);
+        if (inhoud != null && ! inhoud.trim().equals("")) {
+            waarde = Integer.parseInt(inhoud.split("\\.")[0]);
         }
         return waarde;
     }
