@@ -116,5 +116,22 @@ public class Sqlite {
         
     }
 
+    /**
+     * Maak tabel volledig leeg
+     * @param table
+     * @return
+     */
+    public boolean truncateTable(String table) {
+        String sql = "delete from `" + table + "`;";
+        try {
+            executeNoResult(sql);
+            return true;
+        } catch(Exception e) {
+            String msg = e.getClass().toString() + " : "+e.getMessage();
+            throw new RuntimeException(msg);
+        }
+
+    }
+
 
 }
