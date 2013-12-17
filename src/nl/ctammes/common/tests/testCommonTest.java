@@ -5,6 +5,12 @@ import nl.ctammes.common.MijnIni;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.Calendar;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Created with IntelliJ IDEA.
  * User: chris
@@ -31,5 +37,22 @@ public class testCommonTest {
     public void testIp() {
        System.out.println("host: " + Diversen.geefHostnaam());
        System.out.println("user: " + Diversen.geefUsernaam());
+    }
+
+    @Test
+    public void testWeeknr() {
+        Calendar cal = Calendar.getInstance();
+        System.out.println(cal.get(Calendar.WEEK_OF_YEAR));
+    }
+
+    @Test
+    public void testFileWeekNr() {
+        String URENMASK = "cts(\\d{2})\\.xls";
+        String fileName = "cts02.xls";
+        Matcher mat = Pattern.compile(URENMASK, Pattern.CASE_INSENSITIVE).matcher(fileName);
+        if (mat.find()) {
+            System.out.println(mat.groupCount());
+            System.out.println(Integer.valueOf(mat.group(1)));
+        }
     }
 }
