@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -92,6 +93,42 @@ public class Excel {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    /**
+     * Bestaat het werkblad met deze naam
+     * @return
+     */
+    public boolean bestaatWerkklad(String blad) {
+        return (werkboek.getSheet(blad) != null);
+    }
+
+    /**
+     * Bestaat het werkblad met dit nummer
+     * @return
+     */
+    public boolean bestaatWerkklad(int blad) {
+        return (werkboek.getSheetAt(blad) != null);
+    }
+
+    /**
+     * Geef de namen van de werkbladen
+     * @return
+     */
+    public ArrayList<String> getWerkbladen() {
+        ArrayList<String> temp = new ArrayList<String>();
+        for (int i = 0; i<werkboek.getNumberOfSheets(); i++) {
+            temp.add(werkboek.getSheetName(i));
+        }
+        return temp;
+    }
+
+    /**
+     * Opent een werkblad binnen een werkboek
+     * @param blad
+     */
+    public void openWerkblad(String blad) {
+        werkblad = werkboek.getSheet(blad);
     }
 
     /**

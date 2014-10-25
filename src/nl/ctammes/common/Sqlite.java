@@ -118,6 +118,7 @@ public class Sqlite {
 
     /**
      * Maak tabel volledig leeg
+     * (Sneller is een Drop Table gevolgd door Create Table)
      * @param table
      * @return
      */
@@ -133,5 +134,22 @@ public class Sqlite {
 
     }
 
+    /**
+     * Geeft maximum waarde van kolom terug
+     * @param kolom
+     * @param table
+     * @return
+     */
+    public int getMax(String table, String kolom) {
+        String sql = "select max(" + kolom + ") max from " + table + ";";
+        try {
+            ResultSet rs = execute(sql);
+            return rs.getInt("max");
+        } catch(Exception e) {
+            String msg = e.getClass().toString() + " : "+e.getMessage();
+            throw new RuntimeException(msg);
+        }
+
+    }
 
 }

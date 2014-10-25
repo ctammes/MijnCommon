@@ -1,12 +1,18 @@
-package nl.ctammes.common.tests;
+//package nl.ctammes.common.tests;
 
+import junit.framework.TestCase;
 import nl.ctammes.common.Diversen;
+import nl.ctammes.common.Excel;
 import nl.ctammes.common.MijnIni;
+import nl.ctammes.common.Sqlite;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,10 +24,10 @@ import java.util.regex.Pattern;
  * Time: 20:20
  * To change this template use File | Settings | File Templates.
  */
-public class testCommonTest {
-    @BeforeClass
-    public static void setUp() throws Exception {
-
+public class testCommonTest extends TestCase{
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
     }
 
     @Test
@@ -54,5 +60,39 @@ public class testCommonTest {
             System.out.println(mat.groupCount());
             System.out.println(Integer.valueOf(mat.group(1)));
         }
+    }
+
+    @Test
+    public void testSqlite() {
+
+        Sqlite s = new Sqlite("/home/chris/IdeaProjects/java/QueryDb", "QueryDb.db");
+        s.openDb();
+        System.out.printf("max: %s\n", s.getMax("query", "id"));
+        String sql = "insert into query " +
+                "(categorie, titel, tekst) " +
+                "values('test_max', 'test_max', 'test last_insert_id');";
+        try {
+            s.executeNoResult(sql);
+            sql = "select last_insert_rowid() last_id from query limit 1";
+            ResultSet rs = s.execute(sql);
+            System.out.println(rs.getInt("last_id"));
+            sql = "delete from query where categorie = 'test_max';";
+            s.executeNoResult(sql);
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void testExcel() throws Exception {
+        Excel excel = new Excel("./src/nl/ctammes/common/tests/", "Urenregistratie CT 25.xls");
+//        System.out.println(System.getProperty("user.dir"));
+        assertEquals("Urenregistratie CT 25.xls", excel.getSheetFile());
+
+        ArrayList<String> temp = excel.getWerkbladen();
+        assertEquals("Blad2", temp.get(1));
+
+        assertEquals(true, excel.bestaatWerkklad("Blad1"));
+        assertEquals(false, excel.bestaatWerkklad("Blad9"));
+
     }
 }
