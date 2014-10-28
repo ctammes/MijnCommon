@@ -27,7 +27,7 @@ import java.util.Calendar;
  */
 public class Excel {
     
-    private String sheetDirectory = "";     //"C:\Documents and Settings\TammesC\Mijn documenten\Uren\"
+    private String sheetDirectory = "";     //"C:\Documents and Settings\TammesC\Mijn documenten\Uren"
     private String sheetFile = null;   // xls-bestand
     private FileInputStream sheetPath = null;   // xls-bestand incl. path
     private int regelVan = 0;       // eerste dataregel
@@ -43,7 +43,8 @@ public class Excel {
         try {
             sheetDirectory = xlsDir;
             sheetFile = xlsFile;
-            sheetPath = new FileInputStream(new File(xlsDir + "/" + xlsFile));
+            String a = xlsDir + File.separatorChar + xlsFile;
+            sheetPath = new FileInputStream(new File(a));
             werkboek = new HSSFWorkbook(sheetPath);
             werkblad = werkboek.getSheetAt(0);
         } catch(Exception e) {
@@ -99,16 +100,16 @@ public class Excel {
      * Bestaat het werkblad met deze naam
      * @return
      */
-    public boolean bestaatWerkklad(String blad) {
-        return (werkboek.getSheet(blad) != null);
+    public boolean bestaatWerkklad(String bladnaam) {
+        return (werkboek.getSheet(bladnaam) != null);
     }
 
     /**
      * Bestaat het werkblad met dit nummer
      * @return
      */
-    public boolean bestaatWerkklad(int blad) {
-        return (werkboek.getSheetAt(blad) != null);
+    public boolean bestaatWerkklad(int bladnr) {
+        return (werkboek.getSheetAt(bladnr) != null);
     }
 
     /**
@@ -116,19 +117,19 @@ public class Excel {
      * @return
      */
     public ArrayList<String> getWerkbladen() {
-        ArrayList<String> temp = new ArrayList<String>();
+        ArrayList<String> namen = new ArrayList<String>();
         for (int i = 0; i<werkboek.getNumberOfSheets(); i++) {
-            temp.add(werkboek.getSheetName(i));
+            namen.add(werkboek.getSheetName(i));
         }
-        return temp;
+        return namen;
     }
 
     /**
      * Opent een werkblad binnen een werkboek
-     * @param blad
+     * @param bladnaam
      */
-    public void openWerkblad(String blad) {
-        werkblad = werkboek.getSheet(blad);
+    public void openWerkblad(String bladnaam) {
+        werkblad = werkboek.getSheet(bladnaam);
     }
 
     /**

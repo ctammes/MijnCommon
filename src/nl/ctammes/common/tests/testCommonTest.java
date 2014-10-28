@@ -1,5 +1,6 @@
-//package nl.ctammes.common.tests;
+    //package nl.ctammes.common.tests;
 
+import com.sun.org.apache.xpath.internal.operations.Div;
 import junit.framework.TestCase;
 import nl.ctammes.common.Diversen;
 import nl.ctammes.common.Excel;
@@ -36,13 +37,22 @@ public class testCommonTest extends TestCase{
         ini.schrijf("sectie", "item1", "waarde1");
         ini.schrijf("sectie", "item2", "waarde2");
 
-        System.out.println(ini.lees("sectie", "item2"));
+//        System.out.println(ini.lees("sectie", "item2"));
+        assertEquals("waarde2", ini.lees("sectie", "item2"));
     }
 
     @Test
     public void testIp() {
-       System.out.println("host: " + Diversen.geefHostnaam());
-       System.out.println("user: " + Diversen.geefUsernaam());
+//        System.out.println("host: " + Diversen.geefHostnaam());
+//        System.out.println("user: " + Diversen.geefUsernaam());
+        assertEquals("chris-HP-Compaq-dc7900-Convertible-Minitower", Diversen.geefHostnaam());
+        assertEquals("chris", Diversen.geefUsernaam());
+    }
+
+    @Test
+    public void testPwd() {
+//        System.out.println("pwd: " + Diversen.geefPwd());
+        assertEquals("/media/home_12/chris/IdeaProjects/java/MijnCommon", Diversen.geefPwd());
     }
 
     @Test
@@ -83,7 +93,8 @@ public class testCommonTest extends TestCase{
         }
     }
 
-    public void testExcel() throws Exception {
+    @Test
+    public void testExcel()  {
         Excel excel = new Excel("./src/nl/ctammes/common/tests/", "Urenregistratie CT 25.xls");
 //        System.out.println(System.getProperty("user.dir"));
         assertEquals("Urenregistratie CT 25.xls", excel.getSheetFile());
@@ -94,5 +105,11 @@ public class testCommonTest extends TestCase{
         assertEquals(true, excel.bestaatWerkklad("Blad1"));
         assertEquals(false, excel.bestaatWerkklad("Blad9"));
 
+    }
+
+    @Test
+    public void testExcel2() {
+        Excel uren = new Excel("/home/chris/Ideaprojects2/uren2012", "CTS47.xls");
+        System.out.println(uren.bestaatWerkklad(0));
     }
 }

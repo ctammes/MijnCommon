@@ -55,6 +55,6 @@ public class Diversen {
         return System.getProperty("user.name");
     }
 
-
+    public static String geefPwd() { return System.getProperty("user.dir"); }
 
 }
