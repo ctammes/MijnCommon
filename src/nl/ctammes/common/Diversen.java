@@ -3,6 +3,9 @@ package nl.ctammes.common;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.net.InetAddress;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -45,6 +48,23 @@ public class Diversen {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    /**
+     * geef het huidige weeknummer
+     * @return het weeknummer
+     */
+    public static int getWeeknummer() {
+        Calendar nu=Calendar.getInstance();
+        return nu.get(Calendar.WEEK_OF_YEAR);
+    }
+
+    public static String[] splitsPad(String pad) {
+        String[] result = new String[2];
+        File file = new File(pad);
+        result[0] = file.getParent();
+        result[1] = file.getName();
+        return result;
     }
 
     /**

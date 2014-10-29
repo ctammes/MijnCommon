@@ -1,19 +1,17 @@
     //package nl.ctammes.common.tests;
 
-import com.sun.org.apache.xpath.internal.operations.Div;
 import junit.framework.TestCase;
 import nl.ctammes.common.Diversen;
 import nl.ctammes.common.Excel;
 import nl.ctammes.common.MijnIni;
 import nl.ctammes.common.Sqlite;
-import org.junit.BeforeClass;
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.FilenameFilter;
+import java.nio.file.Files;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -109,7 +107,59 @@ public class testCommonTest extends TestCase{
 
     @Test
     public void testExcel2() {
-        Excel uren = new Excel("/home/chris/Ideaprojects2/uren2012", "CTS47.xls");
+        Excel uren = new Excel("/home/chris/Ideaprojects2/uren2013", "CTS47.xls");
         System.out.println(uren.bestaatWerkklad(0));
+    }
+
+    @Test
+    public void testGetWeeknummer() {
+        System.out.println(Diversen.getWeeknummer());
+    }
+
+    @Test
+    public void testSplitsPad() {
+        String fullpath = "/home/chris/Ideaprojects2/uren2013/CTS47.xls";
+        String[] result = Diversen.splitsPad(fullpath);
+        assertEquals("/home/chris/Ideaprojects2/uren2013", result[0]);
+        assertEquals("CTS47.xls", result[1]);
+    }
+
+    @Test
+    public void testCreateNew() {
+        String path = "/home/chris/Ideaprojects2/uren2013";
+        String file = "CTS99.xls";
+        Excel nieuw = new Excel(path, file);
+        System.out.println(nieuw.getWerkbladen());
+        assertEquals("Sheet0", nieuw.getWerkbladen().get(0));
+        nieuw.sluitWerkboek();
+        File f = new File(path + File.separatorChar + file);
+        f.delete();
+    }
+
+    @Test
+    public void testSchrijfCel() {
+        Excel uren = new Excel("/home/chris/Ideaprojects2/uren2013", "CTS47.xls");
+
+        try {
+            File oud = new File("/home/chris/Ideaprojects2/uren2013/CTS47.xls");
+            File nieuw = new File("/home/chris/Ideaprojects2/uren2013/CTS99.xls");
+            FileUtils.copyFile(oud, nieuw);
+
+            String path = "/home/chris/Ideaprojects2/uren2013";
+            String file = "CTS99.xls";
+            Excel excel = new Excel(path, file);
+            excel.schrijfCel(0, 0, 123.0);
+//            excel.schrijfCel(2, 1, "Week: 99");
+
+            excel.wisCellen(18, 2, 5);
+
+            excel.schrijfWerkboek();
+            assertEquals("", excel.leesCel(18,2));
+            excel.sluitWerkboek();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 }

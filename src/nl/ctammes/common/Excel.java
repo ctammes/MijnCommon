@@ -6,16 +6,22 @@ package nl.ctammes.common;/*
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.
+ *
+ * Zie ook: http://poi.apache.org/spreadsheet/quick-guide.html#NewWorkbook
  */
 
+import org.apache.poi.hssf.model.InternalWorkbook;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,6 +35,7 @@ public class Excel {
     
     private String sheetDirectory = "";     //"C:\Documents and Settings\TammesC\Mijn documenten\Uren"
     private String sheetFile = null;   // xls-bestand
+    private String sheetFullName = null;   // volledige naam
     private FileInputStream sheetPath = null;   // xls-bestand incl. path
     private int regelVan = 0;       // eerste dataregel
     private int regelTm = 0;        // laatste dataregel
@@ -38,19 +45,29 @@ public class Excel {
     public Excel() {
     }
 
-    /** Creates a new instance of Excel */
+    /**
+     * Creates a new instance of Excel
+     * Create new workbook with one worksheet if it not exists
+     */
     public Excel(String xlsDir, String xlsFile) {
         try {
             sheetDirectory = xlsDir;
             sheetFile = xlsFile;
-            String a = xlsDir + File.separatorChar + xlsFile;
-            sheetPath = new FileInputStream(new File(a));
+            sheetFullName = xlsDir + File.separatorChar + xlsFile;
+            File file = new File(sheetFullName);
+            if (! file.exists()) {
+                Workbook wb = new HSSFWorkbook();
+                FileOutputStream fileOut = new FileOutputStream(sheetFullName);
+                wb.createSheet();
+                wb.write(fileOut);
+                fileOut.close();
+            }
+            sheetPath = new FileInputStream(file);
             werkboek = new HSSFWorkbook(sheetPath);
             werkblad = werkboek.getSheetAt(0);
         } catch(Exception e) {
             System.out.println(e.getMessage());
         }
-
     }
 
     public FileInputStream getSheetPath() {
@@ -73,6 +90,10 @@ public class Excel {
         return sheetFile;
     }
 
+    public String getSheetFullName() {
+        return sheetFullName;
+    }
+
     public void setSheetDirectory(String sheetDirectory) {
         this.sheetDirectory = sheetDirectory;
     }
@@ -86,9 +107,21 @@ public class Excel {
     }
 
     /**
+     * Schrijf het spreadsheet bestand
+     */
+    public void schrijfWerkboek() {
+        try {
+            FileOutputStream fileOut = new FileOutputStream(sheetFullName);
+            getWerkboek().write(fileOut);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
      * Sluit het spreadsheet bestand
      */
-    public void sluitWerkblad() {
+    public void sluitWerkboek() {
         try {
             sheetPath.close();
         } catch (IOException ex) {
@@ -167,6 +200,40 @@ public class Excel {
         HSSFRow row=werkblad.getRow(rij);
         Cell cell=row.getCell(kolom);
         return celWaarde(cell);
+    }
+
+    public void schrijfCel(int rij, int kolom, Double waarde) {
+        HSSFRow row=werkblad.getRow(rij);
+        Cell cell = row.getCell(kolom);
+        if (cell == null) {
+            row.createCell(kolom, Cell.CELL_TYPE_NUMERIC);
+        }
+        row.getCell(kolom).setCellValue(waarde);
+    }
+
+    public void schrijfCel(int rij, int kolom, String waarde) {
+        HSSFRow row=werkblad.getRow(rij);
+        Cell cell = row.getCell(kolom);
+        if (cell == null) {
+            row.createCell(kolom, Cell.CELL_TYPE_STRING);
+        }
+        row.getCell(kolom).setCellValue(waarde);
+    }
+
+    public void wisCellen(int rij, int kolom, int aantal) {
+        HSSFRow row=werkblad.getRow(rij);
+        int i = 0;
+        while (i++ < aantal) {
+            row.getCell(kolom++).setCellValue("");
+        }
+    }
+
+    public void schrijfCellen(int rij, int kolom, int aantal, Double waarde) {
+        HSSFRow row=werkblad.getRow(rij);
+        int i = 0;
+        while (i++ < aantal) {
+            row.getCell(kolom++).setCellValue(waarde);
+        }
     }
 
     /**
