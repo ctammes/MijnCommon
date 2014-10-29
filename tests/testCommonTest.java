@@ -1,5 +1,3 @@
-    //package nl.ctammes.common.tests;
-
 import junit.framework.TestCase;
 import nl.ctammes.common.Diversen;
 import nl.ctammes.common.Excel;
