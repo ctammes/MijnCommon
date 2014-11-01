@@ -59,6 +59,18 @@ public class Diversen {
         return nu.get(Calendar.WEEK_OF_YEAR);
     }
 
+    /**
+     * geef het weekdagnummer van vandaag
+     * (maandag = 2)
+     * @return
+     */
+    public static int getWeekdagnummer() {
+        Calendar nu=Calendar.getInstance();
+        nu.setFirstDayOfWeek(Calendar.MONDAY);
+        return nu.get(Calendar.DAY_OF_WEEK);
+    }
+
+
     public static String[] splitsPad(String pad) {
         String[] result = new String[2];
         File file = new File(pad);

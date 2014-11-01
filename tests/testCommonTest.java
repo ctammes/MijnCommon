@@ -58,6 +58,11 @@ public class testCommonTest extends TestCase{
     }
 
     @Test
+    public void testWeekdagnr() {
+        System.out.println(Diversen.getWeekdagnummer());
+    }
+
+    @Test
     public void testFileWeekNr() {
         String URENMASK = "cts(\\d{2})\\.xls";
         String fileName = "cts02.xls";
