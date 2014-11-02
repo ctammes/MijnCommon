@@ -23,6 +23,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -279,7 +281,7 @@ public class Excel {
      * @param tijdWaarde de numerieke celwaarde van een Excel datum/tijd cel
      * @return een string in het formaat hh:mm
      */
-    public String tijdNaarTekst(int tijdWaarde) {
+    public static String tijdNaarTekst(int tijdWaarde) {
         int uren=0, minuten=0;
 
         if (tijdWaarde > 0) {
@@ -293,10 +295,10 @@ public class Excel {
     /**
      * Omzetten van een tijdsduur in minuten naar een string (hh:mm)
      * (Een datum/tijd cel kan maximaal 23:59 groot zijn.)
-     * @param tijdWaarde
-     * @return
+     * @param tijdWaarde de tijd in minuten
+     * @return de tijd in tekst (hh:mm)
      */
-    public String tijdNaarTekst(double tijdWaarde) {
+    public static String tijdNaarTekst(double tijdWaarde) {
         long uren=0, minuten=0;
 
         if (tijdWaarde > 0) {
@@ -308,12 +310,34 @@ public class Excel {
     }
 
     /**
-     * Omzetten van een tijdsduur in minuten naar een string (hh:mm)
+     * Omzetten van een tijdsduur in minuten naar een string (h,m) met de decimale tijd
+     * Vb. 45 -> 0.75
+     * @param tijdWaarde
+     * @return
+     */
+    public static String minutenNaarDecimaleTekst(int tijdWaarde) {
+        long uren=0, minuten=0;
+
+        if (tijdWaarde > 0) {
+            uren=(long) tijdWaarde / 60;
+            minuten =(long) ((tijdWaarde / 60.0 - uren) * 100);
+        }
+
+        DecimalFormat f = new DecimalFormat();
+        DecimalFormatSymbols s = f.getDecimalFormatSymbols();
+
+        return String.format("%d%s%d",uren, s.getDecimalSeparator(), minuten);
+
+    }
+
+
+    /**
+     * Omzetten van een tijdsduur (hh:mm) naar minuten
      * (Een datum/tijd cel kan maximaal 23:59 groot zijn.)
      * @param tijdTekst de tijd in tekst (hh:mm)
      * @return de tijd in minuten
      */
-    public int tekstNaarTijd(String tijdTekst) {
+    public static int tekstNaarTijd(String tijdTekst) {
         int uren=0, minuten=0;
 
         if (!tijdTekst.equals("")) {
@@ -333,7 +357,7 @@ public class Excel {
      * @param tijdWaarde de numerieke celwaarde van een Excel datum/tijd cel
      * @return het aantal minuten
      */
-    public int nummerNaarMinuten(double tijdWaarde) {
+    public static int nummerNaarMinuten(double tijdWaarde) {
 
         int waarde=0;
         if (tijdWaarde>0) {
@@ -348,7 +372,7 @@ public class Excel {
      * @param minuten de tijd in minuten
      * @return de getalwaarde (deel van het etmaal)
      */
-    public double minutenNaarNummer(double minuten) {
+    public static double minutenNaarNummer(double minuten) {
 
         double waarde=0;
         if (minuten>0) {
