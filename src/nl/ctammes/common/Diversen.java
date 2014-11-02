@@ -1,11 +1,17 @@
 package nl.ctammes.common;
 
+import com.sun.org.apache.xpath.internal.SourceTree;
+import org.apache.poi.ss.formula.functions.Match;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.net.InetAddress;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -60,8 +66,29 @@ public class Diversen {
     }
 
     /**
+     * geef het weeknummer van een datum
+     * @return het weeknummer
+     */
+    public static int getWeeknummer(String datum) {
+        int dag = 0, maand = 0, jaar = 0;
+        Matcher mat = Pattern.compile("(\\d{2})-(\\d{2})-(\\d{4})").matcher(datum);
+        while (mat.find()) {
+            dag = Integer.valueOf(mat.group(1));
+            maand = Integer.valueOf(mat.group(2));
+            jaar = Integer.valueOf(mat.group(3));
+
+        }
+        Calendar cal=Calendar.getInstance();
+        cal.set(Calendar.YEAR, jaar);
+        cal.set(Calendar.MONTH, maand - 1);
+        cal.set(Calendar.DAY_OF_MONTH, dag);
+
+        return cal.get(Calendar.WEEK_OF_YEAR);
+    }
+
+    /**
      * geef het weekdagnummer van vandaag
-     * (maandag = 2)
+     * (zondag = 1, zaterdag = 7)
      * @return
      */
     public static int getWeekdagnummer() {
@@ -70,7 +97,82 @@ public class Diversen {
         return nu.get(Calendar.DAY_OF_WEEK);
     }
 
+    /**
+     * geef het weekdagnummer van een datum
+     * @param datum (dd-mm-jjjj)
+     * @return
+     */
+    public static int getWeekdagnummer(String datum) {
+        int dag = 0, maand = 0, jaar = 0;
+        Matcher mat = Pattern.compile("(\\d{2})-(\\d{2})-(\\d{4})").matcher(datum);
+        while (mat.find()) {
+            dag = Integer.valueOf(mat.group(1));
+            maand = Integer.valueOf(mat.group(2));
+            jaar = Integer.valueOf(mat.group(3));
 
+        }
+        Calendar cal=Calendar.getInstance();
+        cal.set(Calendar.YEAR, jaar);
+        cal.set(Calendar.MONTH, maand - 1);
+        cal.set(Calendar.DAY_OF_MONTH, dag);
+
+        return cal.get(Calendar.DAY_OF_WEEK);
+
+    }
+
+    /**
+     * Geeft de datum aan de hand van weeknummer, weekdag en jaar
+     * @param weeknr
+     * @param weekdag vb. Calendar.FRIDAY (1=zondag, 7=zaterdag)
+     * @param jaar
+     * @return datum als dd-mm-jjjj
+     */
+    public static String getDatumUitWeekDag(int weeknr, int weekdag, int jaar) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, jaar);
+        cal.set(Calendar.WEEK_OF_YEAR, weeknr);
+        cal.set(Calendar.DAY_OF_WEEK, weekdag);
+        return sdf.format(cal.getTime());
+    }
+
+    /**
+     * Geef begin [0] en einddatum [1] van de opgegeven week in het opgegeven jaar
+     * (Maandag is de eerste dag van de week)
+     * @param weeknr
+     * @param jaar
+     * @return twee datums als dd-mm-jjjj
+     */
+    public static String[] geefWeekDatums(int weeknr, int jaar) {
+        String[] dagen = new String[2];
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        Calendar cal = Calendar.getInstance();
+        cal.clear();
+        cal.set(Calendar.WEEK_OF_YEAR, weeknr);
+        cal.set(Calendar.YEAR, jaar);
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        dagen[0] = sdf.format(cal.getTime());
+        cal.set(Calendar.DATE, cal.get(Calendar.DATE) + 6 );
+        dagen[1] = sdf.format(cal.getTime());
+        return dagen;
+
+    }
+
+    public static String vandaag() {
+        return vandaag("dd-MM-yyyy");
+    }
+
+    public static String vandaag(String format) {
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        Calendar cal = Calendar.getInstance();
+        return sdf.format(cal.getTime());
+    }
+
+    /**
+     * Splits een pad in een directory [0] en een filenaam [1]
+     * @param pad
+     * @return
+     */
     public static String[] splitsPad(String pad) {
         String[] result = new String[2];
         File file = new File(pad);
@@ -78,6 +180,34 @@ public class Diversen {
         result[1] = file.getName();
         return result;
     }
+
+
+    /**
+     * Geeft date object voor datum in tekst
+     * @param datum
+     * @param format
+     * @return
+     */
+    public static Date stringToDate(String datum, String format) {
+        Date result = null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(format);
+            String dateInString = datum;
+            result = sdf.parse(dateInString);
+        } catch (Exception ex) {
+        }
+        return result;
+    }
+
+    /**
+     * Geeft date object voor datum in tekst (jjjj-mm-dd)
+     * @param datum
+     * @return
+     */
+    public static Date stringToDate(String datum) {
+        return stringToDate(datum, "dd-MM-yyyy");
+    }
+
 
     /**
      * Geef de usernaam

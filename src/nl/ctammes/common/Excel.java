@@ -236,6 +236,14 @@ public class Excel {
         }
     }
 
+    public void schrijfCellen(int rij, int kolom, int aantal, String waarde) {
+        HSSFRow row=werkblad.getRow(rij);
+        int i = 0;
+        while (i++ < aantal) {
+            row.getCell(kolom++).setCellValue(waarde);
+        }
+    }
+
     /**
      * Geef de waarde van een cel terug
      * @param cell
@@ -350,26 +358,5 @@ public class Excel {
         return waarde;
     }
 
-
-    /**
-     * Geef begin en einddatum van de opgegeven week in het opgegeven jaar
-     * @param weeknr
-     * @param jaar
-     * @return
-     */
-    public String[] geefWeekDatums(int weeknr, int jaar) {
-        String[] dagen = new String[2];
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        Calendar cal = Calendar.getInstance();
-        cal.clear();
-        cal.set(Calendar.WEEK_OF_YEAR, weeknr);
-        cal.set(Calendar.YEAR, jaar);
-        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        dagen[0] = sdf.format(cal.getTime());
-        cal.set(Calendar.DATE, cal.get(Calendar.DATE) + 6 );
-        dagen[1] = sdf.format(cal.getTime());
-        return dagen;
-
-    }
 
 }

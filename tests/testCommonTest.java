@@ -52,14 +52,35 @@ public class testCommonTest extends TestCase{
     }
 
     @Test
-    public void testWeeknr() {
+    public void testCalendar() {
         Calendar cal = Calendar.getInstance();
         System.out.println(cal.get(Calendar.WEEK_OF_YEAR));
     }
 
     @Test
+    public void testWeeknr() {
+        System.out.println(Diversen.getWeeknummer());
+        System.out.println(Diversen.getWeeknummer("27-10-2014"));
+    }
+
+    @Test
     public void testWeekdagnr() {
         System.out.println(Diversen.getWeekdagnummer());
+        System.out.println(Diversen.getWeekdagnummer("31-10-2014"));
+    }
+
+    @Test
+    public void testStringToDate() {
+        System.out.println(Diversen.stringToDate("31-10-2014"));
+        System.out.println(Diversen.stringToDate("31-09-2014"));
+        System.out.println(Diversen.stringToDate("31092014"));
+        System.out.println(Diversen.stringToDate(""));
+    }
+
+    @Test
+    public void testVandaag() {
+        System.out.println(Diversen.vandaag());
+        System.out.println(Diversen.vandaag("yyyy-MM-dd"));
     }
 
     @Test
@@ -115,11 +136,6 @@ public class testCommonTest extends TestCase{
     }
 
     @Test
-    public void testGetWeeknummer() {
-        System.out.println(Diversen.getWeeknummer());
-    }
-
-    @Test
     public void testSplitsPad() {
         String fullpath = "/home/chris/Ideaprojects2/uren2013/CTS47.xls";
         String[] result = Diversen.splitsPad(fullpath);
@@ -163,6 +179,23 @@ public class testCommonTest extends TestCase{
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    @Test
+    public void testDatumUitWeeknr() throws Exception {
+        String[] dagen = Diversen.geefWeekDatums(44, 2014);
+        assertEquals("begin", "27-10-2014", dagen[0]);
+        assertEquals("einde", "02-11-2014", dagen[1]);
+        System.out.println(dagen[0] + " - " + dagen[1]);
 
     }
+
+    @Test
+    public void testGetDatumUitWeekDag() {
+        assertEquals("27-10-2014", Diversen.getDatumUitWeekDag(44, 2, 2014));
+
+
+    }
+
+
 }
