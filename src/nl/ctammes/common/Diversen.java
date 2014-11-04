@@ -46,7 +46,7 @@ public class Diversen {
      * Geef de hostname
      * @return
      */
-    public static String geefHostnaam() {
+    public static String hostnaam() {
         try {
             InetAddress addr = InetAddress.getLocalHost();
             byte[] ipAddr = addr.getAddress();
@@ -60,8 +60,9 @@ public class Diversen {
      * geef het huidige weeknummer
      * @return het weeknummer
      */
-    public static int getWeeknummer() {
+    public static int weekNummer() {
         Calendar nu=Calendar.getInstance();
+        nu.setFirstDayOfWeek(Calendar.MONDAY);
         return nu.get(Calendar.WEEK_OF_YEAR);
     }
 
@@ -69,21 +70,42 @@ public class Diversen {
      * geef het weeknummer van een datum
      * @return het weeknummer
      */
-    public static int getWeeknummer(String datum) {
-        int dag = 0, maand = 0, jaar = 0;
-        Matcher mat = Pattern.compile("(\\d{2})-(\\d{2})-(\\d{4})").matcher(datum);
-        while (mat.find()) {
-            dag = Integer.valueOf(mat.group(1));
-            maand = Integer.valueOf(mat.group(2));
-            jaar = Integer.valueOf(mat.group(3));
-
-        }
-        Calendar cal=Calendar.getInstance();
-        cal.set(Calendar.YEAR, jaar);
-        cal.set(Calendar.MONTH, maand - 1);
-        cal.set(Calendar.DAY_OF_MONTH, dag);
-
+    public static int weekNummer(String datum) {
+        Calendar cal = maakDatum(datum);
+        cal.setFirstDayOfWeek(Calendar.MONDAY);
         return cal.get(Calendar.WEEK_OF_YEAR);
+    }
+
+    /**
+     * Geef het nummer van de vorige week (nodig voor oude weeknr bij aanmaken nieuwe week)
+     * @return
+     */
+    public static int vorigeWeekNummer() {
+        Calendar nu=Calendar.getInstance();
+
+        int weeknr = weekNummer();
+        if (weeknr == 1) {
+            return weekNummer(String.format("31-12-%04d", nu.get(Calendar.YEAR - 1)));
+        } else {
+            return weeknr - 1;
+        }
+
+    }
+
+    /**
+     * Geef het nummer van de vorige week (nodig voor oude weeknr bij aanmaken nieuwe week)
+     * @return
+     */
+    public static int vorigeWeekNummer(String datum) {
+        Calendar cal = maakDatum(datum);
+
+        int weeknr = weekNummer(datum);
+        if (weeknr == 1) {
+            return weekNummer(String.format("31-12-%04d", cal.get(Calendar.YEAR) - 1));
+        } else {
+            return weeknr - 1;
+        }
+
     }
 
     /**
@@ -91,31 +113,20 @@ public class Diversen {
      * (zondag = 1, zaterdag = 7)
      * @return
      */
-    public static int getWeekdagnummer() {
+    public static int weekdagNummer() {
         Calendar nu=Calendar.getInstance();
         nu.setFirstDayOfWeek(Calendar.MONDAY);
         return nu.get(Calendar.DAY_OF_WEEK);
     }
 
     /**
-     * geef het weekdagnummer van een datum
+     * geef het weekdagNummer van een datum
      * @param datum (dd-mm-jjjj)
      * @return
      */
-    public static int getWeekdagnummer(String datum) {
-        int dag = 0, maand = 0, jaar = 0;
-        Matcher mat = Pattern.compile("(\\d{2})-(\\d{2})-(\\d{4})").matcher(datum);
-        while (mat.find()) {
-            dag = Integer.valueOf(mat.group(1));
-            maand = Integer.valueOf(mat.group(2));
-            jaar = Integer.valueOf(mat.group(3));
-
-        }
-        Calendar cal=Calendar.getInstance();
-        cal.set(Calendar.YEAR, jaar);
-        cal.set(Calendar.MONTH, maand - 1);
-        cal.set(Calendar.DAY_OF_MONTH, dag);
-
+    public static int weekdagNummer(String datum) {
+        Calendar cal = maakDatum(datum);
+        cal.setFirstDayOfWeek(Calendar.MONDAY);
         return cal.get(Calendar.DAY_OF_WEEK);
 
     }
@@ -127,12 +138,13 @@ public class Diversen {
      * @param jaar
      * @return datum als dd-mm-jjjj
      */
-    public static String getDatumUitWeekDag(int weeknr, int weekdag, int jaar) {
+    public static String datumUitWeekDag(int weeknr, int weekdag, int jaar) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, jaar);
         cal.set(Calendar.WEEK_OF_YEAR, weeknr);
         cal.set(Calendar.DAY_OF_WEEK, weekdag);
+        cal.setFirstDayOfWeek(Calendar.MONDAY);
         return sdf.format(cal.getTime());
     }
 
@@ -143,14 +155,14 @@ public class Diversen {
      * @param jaar
      * @return twee datums als dd-mm-jjjj
      */
-    public static String[] geefWeekDatums(int weeknr, int jaar) {
+    public static String[] weekDatums(int weeknr, int jaar) {
         String[] dagen = new String[2];
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         Calendar cal = Calendar.getInstance();
         cal.clear();
         cal.set(Calendar.WEEK_OF_YEAR, weeknr);
         cal.set(Calendar.YEAR, jaar);
-        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        cal.setFirstDayOfWeek(Calendar.MONDAY);
         dagen[0] = sdf.format(cal.getTime());
         cal.set(Calendar.DATE, cal.get(Calendar.DATE) + 6 );
         dagen[1] = sdf.format(cal.getTime());
@@ -213,10 +225,32 @@ public class Diversen {
      * Geef de usernaam
      * @return
      */
-    public static String geefUsernaam() {
+    public static String usernaam() {
         return System.getProperty("user.name");
     }
 
-    public static String geefPwd() { return System.getProperty("user.dir"); }
+    public static String pwd() { return System.getProperty("user.dir"); }
+
+    /**
+     * Maak een Calendar object van een datum (dd-mm-jjjj)
+     * @param datum
+     * @return
+     */
+    private static Calendar maakDatum(String datum) {
+        int dag = 0, maand = 0, jaar = 0;
+        Matcher mat = Pattern.compile("(\\d{2})-(\\d{2})-(\\d{4})").matcher(datum);
+        while (mat.find()) {
+            dag = Integer.valueOf(mat.group(1));
+            maand = Integer.valueOf(mat.group(2));
+            jaar = Integer.valueOf(mat.group(3));
+
+        }
+        Calendar cal=Calendar.getInstance();
+        cal.set(Calendar.YEAR, jaar);
+        cal.set(Calendar.MONTH, maand - 1);
+        cal.set(Calendar.DAY_OF_MONTH, dag);
+        cal.setFirstDayOfWeek(Calendar.MONDAY);
+        return cal;
+    }
 
 }

@@ -1,13 +1,10 @@
+package nl.ctammes.common;
+
 import junit.framework.TestCase;
-import nl.ctammes.common.Diversen;
-import nl.ctammes.common.Excel;
-import nl.ctammes.common.MijnIni;
-import nl.ctammes.common.Sqlite;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,16 +36,16 @@ public class testCommonTest extends TestCase{
 
     @Test
     public void testIp() {
-//        System.out.println("host: " + Diversen.geefHostnaam());
-//        System.out.println("user: " + Diversen.geefUsernaam());
-        assertEquals("chris-HP-Compaq-dc7900-Convertible-Minitower", Diversen.geefHostnaam());
-        assertEquals("chris", Diversen.geefUsernaam());
+//        System.out.println("host: " + Diversen.hostnaam());
+//        System.out.println("user: " + Diversen.usernaam());
+        assertEquals("chris-HP-Compaq-dc7900-Convertible-Minitower", Diversen.hostnaam());
+        assertEquals("chris", Diversen.usernaam());
     }
 
     @Test
     public void testPwd() {
-//        System.out.println("pwd: " + Diversen.geefPwd());
-        assertEquals("/media/home_12/chris/IdeaProjects/java/MijnCommon", Diversen.geefPwd());
+//        System.out.println("pwd: " + Diversen.pwd());
+        assertEquals("/media/home_12/chris/IdeaProjects/java/MijnCommon", Diversen.pwd());
     }
 
     @Test
@@ -59,14 +56,14 @@ public class testCommonTest extends TestCase{
 
     @Test
     public void testWeeknr() {
-        System.out.println(Diversen.getWeeknummer());
-        System.out.println(Diversen.getWeeknummer("27-10-2014"));
+        System.out.println(Diversen.weekNummer());
+        System.out.println(Diversen.weekNummer("27-10-2014"));
     }
 
     @Test
     public void testWeekdagnr() {
-        System.out.println(Diversen.getWeekdagnummer());
-        System.out.println(Diversen.getWeekdagnummer("31-10-2014"));
+        System.out.println(Diversen.weekdagNummer());
+        System.out.println(Diversen.weekdagNummer("31-10-2014"));
     }
 
     @Test
@@ -183,7 +180,7 @@ public class testCommonTest extends TestCase{
 
     @Test
     public void testDatumUitWeeknr() throws Exception {
-        String[] dagen = Diversen.geefWeekDatums(44, 2014);
+        String[] dagen = Diversen.weekDatums(44, 2014);
         assertEquals("begin", "27-10-2014", dagen[0]);
         assertEquals("einde", "02-11-2014", dagen[1]);
         System.out.println(dagen[0] + " - " + dagen[1]);
@@ -192,10 +189,29 @@ public class testCommonTest extends TestCase{
 
     @Test
     public void testGetDatumUitWeekDag() {
-        assertEquals("27-10-2014", Diversen.getDatumUitWeekDag(44, 2, 2014));
+        assertEquals("27-10-2014", Diversen.datumUitWeekDag(44, 2, 2014));
+    }
 
+    @Test
+    public void testMinutenNaarDecimaleTekst() {
+        assertEquals("0,8", Excel.minutenNaarDecimaleTekst(45));
+        assertEquals("1,5", Excel.minutenNaarDecimaleTekst(90));
 
     }
 
+    @Test
+    public void testWisCellen() {
+        Excel uren = new Excel("/home/chris/Ideaprojects2/java/Urenlog", "CTS45.xls");
+
+    }
+
+    @Test
+    public void testVorigeWeekNummer() {
+        System.out.println(Diversen.vorigeWeekNummer());
+        assertEquals(1, Diversen.vorigeWeekNummer("03-01-2014"));
+        assertEquals(53, Diversen.vorigeWeekNummer("04-01-2010"));
+        assertEquals(52, Diversen.vorigeWeekNummer("29-12-2009"));
+        assertEquals(1, Diversen.vorigeWeekNummer("01-01-2009"));
+    }
 
 }

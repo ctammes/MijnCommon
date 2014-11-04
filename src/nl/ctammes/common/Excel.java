@@ -311,23 +311,12 @@ public class Excel {
 
     /**
      * Omzetten van een tijdsduur in minuten naar een string (h,m) met de decimale tijd
-     * Vb. 45 -> 0.75
+     * Vb. 45 -> 0,8
      * @param tijdWaarde
      * @return
      */
     public static String minutenNaarDecimaleTekst(int tijdWaarde) {
-        long uren=0, minuten=0;
-
-        if (tijdWaarde > 0) {
-            uren=(long) tijdWaarde / 60;
-            minuten =(long) ((tijdWaarde / 60.0 - uren) * 100);
-        }
-
-        DecimalFormat f = new DecimalFormat();
-        DecimalFormatSymbols s = f.getDecimalFormatSymbols();
-
-        return String.format("%d%s%d",uren, s.getDecimalSeparator(), minuten);
-
+        return String.format("%.1f", ((tijdWaarde / 60.0) * 100) /100);
     }
 
 
