@@ -131,6 +131,12 @@ public class Diversen {
 
     }
 
+    public static String weekdagNaamKort(String datum) {
+        Calendar cal = maakDatum(datum);
+        int dag = cal.get(Calendar.DAY_OF_WEEK);
+        return cal.getDisplayName(dag, Calendar.SHORT, null);
+    }
+
     /**
      * Geeft de datum aan de hand van weeknummer, weekdag en jaar
      * @param weeknr

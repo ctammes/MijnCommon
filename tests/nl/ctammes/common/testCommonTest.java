@@ -8,6 +8,7 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -212,6 +213,13 @@ public class testCommonTest extends TestCase{
         assertEquals(53, Diversen.vorigeWeekNummer("04-01-2010"));
         assertEquals(52, Diversen.vorigeWeekNummer("29-12-2009"));
         assertEquals(1, Diversen.vorigeWeekNummer("01-01-2009"));
+    }
+
+    @Test
+    public void testWeekdagNaamKort() {
+        Calendar cal = Calendar.getInstance();
+        System.out.println(cal.getDisplayName(5, Calendar.LONG, Locale.getDefault()));
+//        Diversen.weekdagNaamKort(Diversen.vandaag());
     }
 
 }
