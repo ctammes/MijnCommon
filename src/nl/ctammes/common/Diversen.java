@@ -7,10 +7,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -131,10 +128,32 @@ public class Diversen {
 
     }
 
+    /**
+     * Geeft de korte naam van de dag voor een datum
+     * @param datum (dd-mm-jjjj)
+     * @return
+     */
     public static String weekdagNaamKort(String datum) {
-        Calendar cal = maakDatum(datum);
-        int dag = cal.get(Calendar.DAY_OF_WEEK);
-        return cal.getDisplayName(dag, Calendar.SHORT, null);
+        try {
+            Date date = new SimpleDateFormat("dd-MM-yyyy").parse(datum);
+            return  new SimpleDateFormat("EE", Locale.getDefault()).format(date);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    /**
+     * Geeft de korte naam van de dag voor een datum
+     * @param datum (dd-mm-jjjj)
+     * @return
+     */
+    public static String weekdagNaamLang(String datum) {
+        try {
+            Date date = new SimpleDateFormat("dd-MM-yyyy").parse(datum);
+            return  new SimpleDateFormat("EEEE", Locale.getDefault()).format(date);
+        } catch (Exception ex) {
+            return null;
+        }
     }
 
     /**

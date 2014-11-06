@@ -6,8 +6,10 @@ import org.junit.Test;
 
 import java.io.File;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -217,9 +219,16 @@ public class testCommonTest extends TestCase{
 
     @Test
     public void testWeekdagNaamKort() {
-        Calendar cal = Calendar.getInstance();
-        System.out.println(cal.getDisplayName(5, Calendar.LONG, Locale.getDefault()));
-//        Diversen.weekdagNaamKort(Diversen.vandaag());
+        assertEquals("do", Diversen.weekdagNaamKort("06-11-2014"));
+        assertEquals("zaterdag", Diversen.weekdagNaamLang("08-11-2014"));
     }
+
+    @Test
+    public void testVulTijd() {
+        Excel uren = new Excel("/home/chris/IdeaProjects2/java/Urenlog", "CTS45.xls");
+        uren.schrijfCel(6,5,10.0);
+
+    }
+
 
 }
