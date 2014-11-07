@@ -109,7 +109,7 @@ public class Excel {
     }
 
     /**
-     * Schrijf het spreadsheet bestand
+     * Sla het spreadsheet bestand op
      */
     public void schrijfWerkboek() {
         try {
@@ -120,6 +120,9 @@ public class Excel {
         }
     }
 
+    /**
+     * Herberekenen na aanpassen (hoe??)
+     */
     public void herberekenWerkboek() {
         try {
             FileOutputStream fileOut = new FileOutputStream(sheetFullName);
@@ -157,7 +160,7 @@ public class Excel {
     }
 
     /**
-     * Geef de namen van de werkbladen
+     * Geef de namen van de werkbladen van het werkboek
      * @return
      */
     public ArrayList<String> getWerkbladen() {
@@ -177,7 +180,7 @@ public class Excel {
     }
 
     /**
-     * Geef aantal rijen in werkblad
+     * Geef aantal rijen in het actieve werkblad
      * @return
      */
     public int aantalRijen() {
@@ -186,6 +189,7 @@ public class Excel {
 
     /**
      * Lees numerieke waarde en geef integer terug
+     * Het deel achter de decimale punt wordt genegeerd
      * Gebruikt bij uitlezen van tijd
      * @param rij
      * @param kolom
@@ -215,18 +219,12 @@ public class Excel {
         return celWaarde(cell);
     }
 
-    public void schrijfCel(int rij, int kolom, Double waarde) {
-        HSSFRow row=werkblad.getRow(rij);
-        if (row == null) {
-            werkblad.createRow(rij);
-        }
-        Cell cell = werkblad.getRow(rij).getCell(kolom);
-        if (cell == null) {
-            row.createCell(kolom, Cell.CELL_TYPE_NUMERIC);
-        }
-        row.getCell(kolom).setCellValue(waarde / 60 / 24);
-    }
-
+    /**
+     * Vul een cel met een tijdwaarde
+     * @param rij
+     * @param kolom
+     * @param waarde
+     */
     public void schrijfTijdCel(int rij, int kolom, int waarde) {
         HSSFRow row=werkblad.getRow(rij);
         if (row == null) {
@@ -240,6 +238,40 @@ public class Excel {
         row.getCell(kolom).setCellValue(minutenNaarNummer(waarde ));
     }
 
+    /**
+     * Vul een reeks cel met een identieke tijdwaarde
+     * @param rij
+     * @param kolom
+     * @param waarde
+     */
+    public void schrijfTijdCellen(int rij, int kolom, int aantal, int waarde) {
+        for (int i = 0; i < aantal; i++) {
+            schrijfTijdCel(rij, kolom + 1, waarde);
+        }
+    }
+
+    /**
+     * Wis een reeks cellen vanaf een startcel
+     * @param rij
+     * @param kolom
+     * @param aantal
+     */
+    public void wisCellen(int rij, int kolom, int aantal) {
+        HSSFRow row=werkblad.getRow(rij);
+        if (row != null) {
+            int i = 0;
+            while (i++ < aantal) {
+                row.getCell(kolom++).setCellType(HSSFCell.CELL_TYPE_BLANK);
+            }
+        }
+    }
+
+    /**
+     * Vul een cel met een tekst
+     * @param rij
+     * @param kolom
+     * @param waarde
+     */
     public void schrijfCel(int rij, int kolom, String waarde) {
         HSSFRow row=werkblad.getRow(rij);
         if (row == null) {
@@ -252,65 +284,52 @@ public class Excel {
         row.getCell(kolom).setCellValue(waarde);
     }
 
-    public void wisCellen(int rij, int kolom, int aantal) {
-        HSSFRow row=werkblad.getRow(rij);
-        if (row != null) {
-            int i = 0;
-            while (i++ < aantal) {
-                row.getCell(kolom++).setCellValue("");
-            }
-        }
-    }
-
-    public void wisTijdCellen(int rij, int kolom, int aantal) {
-        HSSFRow row=werkblad.getRow(rij);
-        if (row != null) {
-            int i = 0;
-            while (i++ < aantal) {
-                Cell cell = row.getCell(kolom++);
-                row.getCell(kolom++).setCellValue(0);
-            }
-        }
-    }
-
-    public void schrijfCellen(int rij, int kolom, int aantal, Double waarde) {
-        HSSFRow row=werkblad.getRow(rij);
-        if (row == null) {
-            werkblad.createRow(rij);
-            row=werkblad.getRow(rij);
-        }
-        int i = 0;
-        while (i++ < aantal) {
-            row.getCell(kolom++).setCellValue(waarde);
-        }
-    }
-
+    /**
+     * Vul een reeks cellen met een identieke waarde
+     * @param rij
+     * @param kolom
+     * @param aantal
+     * @param waarde
+     */
     public void schrijfCellen(int rij, int kolom, int aantal, String waarde) {
-        HSSFRow row=werkblad.getRow(rij);
-        if (row == null) {
-            werkblad.createRow(rij);
-            row=werkblad.getRow(rij);
-        }
-        int i = 0;
-        while (i++ < aantal) {
-            row.getCell(kolom++).setCellValue(waarde);
-        }
-    }
-
-    public void schrijfCellen(int rij, int kolom, int aantal, int waarde) {
-        HSSFRow row=werkblad.getRow(rij);
-        if (row == null) {
-            werkblad.createRow(rij);
-            row=werkblad.getRow(rij);
-        }
-        int i = 0;
-        while (i++ < aantal) {
-            row.getCell(kolom++).setCellValue(waarde);
+        for (int i = 0; i < aantal; i++) {
+            schrijfCel(rij, kolom + i, waarde);
         }
     }
 
     /**
-     * Geef de waarde van een cel terug
+     * Vul een cel met een getal
+     * @param rij
+     * @param kolom
+     * @param waarde
+     */
+    public void schrijfCel(int rij, int kolom, int waarde) {
+        HSSFRow row=werkblad.getRow(rij);
+        if (row == null) {
+            werkblad.createRow(rij);
+        }
+        Cell cell = werkblad.getRow(rij).getCell(kolom);
+        if (cell == null) {
+            row.createCell(kolom, Cell.CELL_TYPE_NUMERIC);
+        }
+        row.getCell(kolom).setCellValue(waarde);
+    }
+
+    /**
+     * Vul een reeks cellen met een identieke waarde
+     * @param rij
+     * @param kolom
+     * @param aantal
+     * @param waarde
+     */
+    public void schrijfCellen(int rij, int kolom, int aantal, int waarde) {
+        for (int i = 0; i < aantal; i++) {
+            schrijfCel(rij, kolom + i, waarde);
+        }
+    }
+
+    /**
+     * Geef de waarde van een cel als tekst terug
      * @param cell
      * @return string
      */
@@ -381,7 +400,6 @@ public class Excel {
     public static String minutenNaarDecimaleTekst(int tijdWaarde) {
         return String.format("%.1f", ((tijdWaarde / 60.0) * 100) /100);
     }
-
 
     /**
      * Omzetten van een tijdsduur (hh:mm) naar minuten

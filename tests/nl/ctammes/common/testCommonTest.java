@@ -167,7 +167,7 @@ public class testCommonTest extends TestCase{
             String path = "/home/chris/Ideaprojects2/uren2013";
             String file = "CTS99.xls";
             Excel excel = new Excel(path, file);
-            excel.schrijfCel(0, 0, 123.0);
+            excel.schrijfTijdCel(0, 0, 123);
 //            excel.schrijfCel(2, 1, "Week: 99");
 
             excel.wisCellen(18, 2, 5);
@@ -226,7 +226,21 @@ public class testCommonTest extends TestCase{
     @Test
     public void testVulTijd() {
         Excel uren = new Excel("/home/chris/IdeaProjects2/java/Urenlog", "CTS45.xls");
-        uren.schrijfCel(6,5,10.0);
+        uren.schrijfTijdCel(6,5,10);
+
+        // lege tijdcel
+        String duur = uren.leesCel(38,4);
+        System.out.println(duur);
+
+        // in/uit tijden
+        duur = uren.leesCel(51,2);
+        System.out.println(duur);
+
+        uren.schrijfTijdCel(52, 2, Excel.tekstNaarTijd("17:30"));
+        uren.schrijfWerkboek();
+        duur = uren.leesCel(52,2);
+        System.out.println(duur);
+
 
     }
 
