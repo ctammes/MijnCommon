@@ -230,12 +230,13 @@ public class testCommonTest extends TestCase{
 
     }
 
+    // deze is voor de laptop
     @Test
     public void testVultijd1() {
         // celwaarde * 24 * 60 = minuten
         // minuten / 60 / 24 = celwaarde
         Excel uren = new Excel("/home/chris/IdeaProjects/uren2013", "CTS45.xls");
-        String duur = uren.leesCel(9,2);
+        String duur = uren.leesCel(6,2);
         System.out.println(duur);
         duur = uren.leesCel(9,4);
         System.out.println(duur);
@@ -243,6 +244,22 @@ public class testCommonTest extends TestCase{
         uren.schrijfWerkboek();
         duur = uren.leesCel(9,3);
         System.out.println(duur);
+        uren.sluitWerkboek();
     }
+
+    @Test
+    public void testVulTijd2() {
+        Excel uren = new Excel("/home/chris/IdeaProjects/uren2013", "CTS45.xls");
+        String duur = uren.leesCel(61,2);
+        System.out.println(duur);
+
+        uren.schrijfTijdCel(62, 2, Excel.tekstNaarTijd("17:30"));
+        uren.schrijfWerkboek();
+        duur = uren.leesCel(62,2);
+        System.out.println(duur);
+        uren.sluitWerkboek();
+
+    }
+
 
 }

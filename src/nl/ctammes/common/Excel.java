@@ -207,15 +207,20 @@ public class Excel {
      * @return de gevonden waarde als string
      */
     public String leesCel(int rij, int kolom) {
-          
         HSSFRow row=werkblad.getRow(rij);
-        Cell cell=row.getCell(kolom);
+        if (row == null) {
+            werkblad.createRow(rij);
+        }
+        Cell cell = werkblad.getRow(rij).getCell(kolom);
         return celWaarde(cell);
     }
 
     public void schrijfCel(int rij, int kolom, Double waarde) {
         HSSFRow row=werkblad.getRow(rij);
-        Cell cell = row.getCell(kolom);
+        if (row == null) {
+            werkblad.createRow(rij);
+        }
+        Cell cell = werkblad.getRow(rij).getCell(kolom);
         if (cell == null) {
             row.createCell(kolom, Cell.CELL_TYPE_NUMERIC);
         }
@@ -224,6 +229,10 @@ public class Excel {
 
     public void schrijfTijdCel(int rij, int kolom, int waarde) {
         HSSFRow row=werkblad.getRow(rij);
+        if (row == null) {
+            werkblad.createRow(rij);
+            row=werkblad.getRow(rij);
+        }
         Cell cell = row.getCell(kolom);
         if (cell == null) {
             row.createCell(kolom, Cell.CELL_TYPE_NUMERIC);
@@ -233,7 +242,10 @@ public class Excel {
 
     public void schrijfCel(int rij, int kolom, String waarde) {
         HSSFRow row=werkblad.getRow(rij);
-        Cell cell = row.getCell(kolom);
+        if (row == null) {
+            werkblad.createRow(rij);
+        }
+        Cell cell = werkblad.getRow(rij).getCell(kolom);
         if (cell == null) {
             row.createCell(kolom, Cell.CELL_TYPE_STRING);
         }
@@ -242,14 +254,31 @@ public class Excel {
 
     public void wisCellen(int rij, int kolom, int aantal) {
         HSSFRow row=werkblad.getRow(rij);
-        int i = 0;
-        while (i++ < aantal) {
-            row.getCell(kolom++).setCellValue("");
+        if (row != null) {
+            int i = 0;
+            while (i++ < aantal) {
+                row.getCell(kolom++).setCellValue("");
+            }
+        }
+    }
+
+    public void wisTijdCellen(int rij, int kolom, int aantal) {
+        HSSFRow row=werkblad.getRow(rij);
+        if (row != null) {
+            int i = 0;
+            while (i++ < aantal) {
+                Cell cell = row.getCell(kolom++);
+                row.getCell(kolom++).setCellValue(0);
+            }
         }
     }
 
     public void schrijfCellen(int rij, int kolom, int aantal, Double waarde) {
         HSSFRow row=werkblad.getRow(rij);
+        if (row == null) {
+            werkblad.createRow(rij);
+            row=werkblad.getRow(rij);
+        }
         int i = 0;
         while (i++ < aantal) {
             row.getCell(kolom++).setCellValue(waarde);
@@ -258,6 +287,22 @@ public class Excel {
 
     public void schrijfCellen(int rij, int kolom, int aantal, String waarde) {
         HSSFRow row=werkblad.getRow(rij);
+        if (row == null) {
+            werkblad.createRow(rij);
+            row=werkblad.getRow(rij);
+        }
+        int i = 0;
+        while (i++ < aantal) {
+            row.getCell(kolom++).setCellValue(waarde);
+        }
+    }
+
+    public void schrijfCellen(int rij, int kolom, int aantal, int waarde) {
+        HSSFRow row=werkblad.getRow(rij);
+        if (row == null) {
+            werkblad.createRow(rij);
+            row=werkblad.getRow(rij);
+        }
         int i = 0;
         while (i++ < aantal) {
             row.getCell(kolom++).setCellValue(waarde);
