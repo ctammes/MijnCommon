@@ -230,5 +230,19 @@ public class testCommonTest extends TestCase{
 
     }
 
+    @Test
+    public void testVultijd1() {
+        // celwaarde * 24 * 60 = minuten
+        // minuten / 60 / 24 = celwaarde
+        Excel uren = new Excel("/home/chris/IdeaProjects/uren2013", "CTS45.xls");
+        String duur = uren.leesCel(9,2);
+        System.out.println(duur);
+        duur = uren.leesCel(9,4);
+        System.out.println(duur);
+        uren.schrijfTijdCel(9,3,21);
+        uren.schrijfWerkboek();
+        duur = uren.leesCel(9,3);
+        System.out.println(duur);
+    }
 
 }

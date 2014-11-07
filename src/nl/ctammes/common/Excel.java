@@ -120,6 +120,15 @@ public class Excel {
         }
     }
 
+    public void herberekenWerkboek() {
+        try {
+            FileOutputStream fileOut = new FileOutputStream(sheetFullName);
+            getWerkboek().write(fileOut);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
     /**
      * Sluit het spreadsheet bestand
      */
@@ -210,7 +219,16 @@ public class Excel {
         if (cell == null) {
             row.createCell(kolom, Cell.CELL_TYPE_NUMERIC);
         }
-        row.getCell(kolom).setCellValue(waarde);
+        row.getCell(kolom).setCellValue(waarde / 60 / 24);
+    }
+
+    public void schrijfTijdCel(int rij, int kolom, int waarde) {
+        HSSFRow row=werkblad.getRow(rij);
+        Cell cell = row.getCell(kolom);
+        if (cell == null) {
+            row.createCell(kolom, Cell.CELL_TYPE_NUMERIC);
+        }
+        row.getCell(kolom).setCellValue(minutenNaarNummer(waarde ));
     }
 
     public void schrijfCel(int rij, int kolom, String waarde) {
