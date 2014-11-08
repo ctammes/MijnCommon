@@ -141,7 +141,7 @@ public class Excel {
      * Bestaat het werkblad met deze naam
      * @return
      */
-    public boolean bestaatWerkklad(String bladnaam) {
+    public boolean bestaatWerkblad(String bladnaam) {
         return (werkboek.getSheet(bladnaam) != null);
     }
 
@@ -149,7 +149,7 @@ public class Excel {
      * Bestaat het werkblad met dit nummer
      * @return
      */
-    public boolean bestaatWerkklad(int bladnr) {
+    public boolean bestaatWerkblad(int bladnr) {
         return (werkboek.getSheetAt(bladnr) != null);
     }
 

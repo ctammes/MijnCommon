@@ -128,15 +128,15 @@ public class testCommonTest extends TestCase{
         ArrayList<String> temp = excel.getWerkbladen();
         assertEquals("Blad2", temp.get(1));
 
-        assertEquals(true, excel.bestaatWerkklad("Blad1"));
-        assertEquals(false, excel.bestaatWerkklad("Blad9"));
+        assertEquals(true, excel.bestaatWerkblad("Blad1"));
+        assertEquals(false, excel.bestaatWerkblad("Blad9"));
 
     }
 
     @Test
     public void testExcel2() {
         Excel uren = new Excel(projDir + "uren2013", "CTS47.xls");
-        System.out.println(uren.bestaatWerkklad(0));
+        System.out.println(uren.bestaatWerkblad(0));
     }
 
     @Test
