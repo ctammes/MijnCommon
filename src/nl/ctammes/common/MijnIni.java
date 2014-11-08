@@ -24,7 +24,7 @@ public class MijnIni {
     public MijnIni(String inifile) {
         File file = new File(inifile);
         if (!file.exists()) {
-            if (JOptionPane.showConfirmDialog(null, "Inifile " + inifile + " niet gevonden. Aanmaken?", "Bevestig keuze", JOptionPane.INFORMATION_MESSAGE) == JOptionPane.YES_OPTION) {
+            if (JOptionPane.showConfirmDialog(null, "Inifile " + inifile + " niet gevonden. Aanmaken?", "Bevestig keuze", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                 try {
                     file.createNewFile();
                 } catch(Exception e) {

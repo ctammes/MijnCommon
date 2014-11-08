@@ -10,24 +10,18 @@ package nl.ctammes.common;/*
  * Zie ook: http://poi.apache.org/spreadsheet/quick-guide.html#NewWorkbook
  */
 
-import org.apache.poi.hssf.model.InternalWorkbook;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 /**
  *
@@ -246,7 +240,7 @@ public class Excel {
      */
     public void schrijfTijdCellen(int rij, int kolom, int aantal, int waarde) {
         for (int i = 0; i < aantal; i++) {
-            schrijfTijdCel(rij, kolom + 1, waarde);
+            schrijfTijdCel(rij, kolom + i, waarde);
         }
     }
 
@@ -367,8 +361,8 @@ public class Excel {
         int uren=0, minuten=0;
 
         if (tijdWaarde > 0) {
-            uren=(int) tijdWaarde / 60;
-            minuten=(int) (tijdWaarde - uren * 60);
+            uren = (int) tijdWaarde / 60;
+            minuten = tijdWaarde - uren * 60;
         }
 
         return String.format("%02d:%02d",uren,minuten);
@@ -419,7 +413,19 @@ public class Excel {
         } else {
             return 0;
         }
+    }
 
+    /**
+     * Geef de tijd (hh:mm) terug als een uren en minuten deel
+     * @param tijdTekst
+     * @return
+     */
+    public static String[] splitsTijd(String tijdTekst) {
+        if (!tijdTekst.equals("")) {
+            return tijdTekst.split(":");
+        } else {
+            return null;
+        }
     }
 
     /**

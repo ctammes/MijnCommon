@@ -74,8 +74,7 @@ public class Sqlite {
             Statement statement = this.conn.createStatement();
             statement.setQueryTimeout(queryTimeout);  // set timeout to 30 sec.
 
-            ResultSet rs = statement.executeQuery(sql);
-            return rs;
+            return statement.executeQuery(sql);
         } catch(OutOfMemoryError e) {
             // if the error message is "out of memory",
             // it probably means no database file is found

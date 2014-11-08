@@ -1,8 +1,5 @@
 package nl.ctammes.common;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
-import org.apache.poi.ss.formula.functions.Match;
-
 import java.io.File;
 import java.io.FilenameFilter;
 import java.net.InetAddress;
@@ -30,13 +27,12 @@ public class Diversen {
     public static String[] leesFileNamen(String dir, String mask) {
         File map = new File(dir);
         final String regex = mask;  // met mask werkt het niet; moet final zijn
-        String[] files = map.list(new FilenameFilter() {
+        return map.list(new FilenameFilter() {
             @Override
             public boolean accept(File map, String fileName) {
                 return Pattern.matches(regex, fileName.toLowerCase());
             }
         });
-        return files;
     }
 
     /**
@@ -51,6 +47,16 @@ public class Diversen {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    /**
+     * Draait het script op de desktop of de laptop
+     * (Tbv. testen)
+     * @return
+     */
+    public static boolean isDesktop() {
+        String hostnaam = Diversen.hostnaam();
+        return (hostnaam.contains("dc7900"));
     }
 
     /**
@@ -229,8 +235,7 @@ public class Diversen {
         Date result = null;
         try {
             SimpleDateFormat sdf = new SimpleDateFormat(format);
-            String dateInString = datum;
-            result = sdf.parse(dateInString);
+            result = sdf.parse(datum);
         } catch (Exception ex) {
         }
         return result;
@@ -255,6 +260,16 @@ public class Diversen {
     }
 
     public static String pwd() { return System.getProperty("user.dir"); }
+
+    /**
+     * Controleer of directory of bestand bestaat
+     * @param pad
+     * @return
+     */
+    public static boolean bestaatPad(String pad) {
+        File temp = new File(pad);
+        return temp.exists();
+    }
 
     /**
      * Maak een Calendar object van een datum (dd-mm-jjjj)

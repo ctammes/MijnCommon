@@ -6,11 +6,8 @@ import org.junit.Test;
 
 import java.io.File;
 import java.sql.ResultSet;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,9 +19,16 @@ import java.util.regex.Pattern;
  * To change this template use File | Settings | File Templates.
  */
 public class testCommonTest extends TestCase{
+    private String projDir = "";
+
     @Override
     public void setUp() throws Exception {
         super.setUp();
+        if (Diversen.isDesktop()) {
+            projDir = "/home/chris/IdeaProjects2/";
+        } else {
+            projDir = "/home/chris/IdeaProjects/";
+        }
     }
 
     @Test
@@ -131,13 +135,13 @@ public class testCommonTest extends TestCase{
 
     @Test
     public void testExcel2() {
-        Excel uren = new Excel("/home/chris/Ideaprojects2/uren2013", "CTS47.xls");
+        Excel uren = new Excel(projDir + "uren2013", "CTS47.xls");
         System.out.println(uren.bestaatWerkklad(0));
     }
 
     @Test
     public void testSplitsPad() {
-        String fullpath = "/home/chris/Ideaprojects2/uren2013/CTS47.xls";
+        String fullpath = projDir + "uren2013/CTS47.xls";
         String[] result = Diversen.splitsPad(fullpath);
         assertEquals("/home/chris/Ideaprojects2/uren2013", result[0]);
         assertEquals("CTS47.xls", result[1]);
@@ -145,7 +149,7 @@ public class testCommonTest extends TestCase{
 
     @Test
     public void testCreateNew() {
-        String path = "/home/chris/Ideaprojects2/uren2013";
+        String path = projDir + "uren2013";
         String file = "CTS99.xls";
         Excel nieuw = new Excel(path, file);
         System.out.println(nieuw.getWerkbladen());
@@ -157,14 +161,14 @@ public class testCommonTest extends TestCase{
 
     @Test
     public void testSchrijfCel() {
-        Excel uren = new Excel("/home/chris/Ideaprojects2/uren2013", "CTS47.xls");
+        Excel uren = new Excel(projDir + "uren2013", "CTS47.xls");
 
         try {
-            File oud = new File("/home/chris/Ideaprojects2/uren2013/CTS47.xls");
-            File nieuw = new File("/home/chris/Ideaprojects2/uren2013/CTS99.xls");
+            File oud = new File(projDir + "uren2013/CTS47.xls");
+            File nieuw = new File(projDir + "uren2013/CTS99.xls");
             FileUtils.copyFile(oud, nieuw);
 
-            String path = "/home/chris/Ideaprojects2/uren2013";
+            String path = projDir + "uren2013";
             String file = "CTS99.xls";
             Excel excel = new Excel(path, file);
             excel.schrijfTijdCel(0, 0, 123);
@@ -204,7 +208,7 @@ public class testCommonTest extends TestCase{
 
     @Test
     public void testWisCellen() {
-        Excel uren = new Excel("/home/chris/Ideaprojects2/java/Urenlog", "CTS45.xls");
+        Excel uren = new Excel(projDir + "java/Urenlog", "CTS45.xls");
 
     }
 
@@ -223,23 +227,29 @@ public class testCommonTest extends TestCase{
         assertEquals("zaterdag", Diversen.weekdagNaamLang("08-11-2014"));
     }
 
+    // deze is voor de desktop
     @Test
     public void testVulTijd() {
-        Excel uren = new Excel("/home/chris/IdeaProjects2/java/Urenlog", "CTS45.xls");
+        Excel uren = new Excel(projDir + "java/Urenlog", "CTS45.xls");
         uren.schrijfTijdCel(6,5,10);
 
         // lege tijdcel
         String duur = uren.leesCel(38,4);
-        System.out.println(duur);
+        System.out.println("leesCel(38,4): " + duur);
 
         // in/uit tijden
         duur = uren.leesCel(51,2);
-        System.out.println(duur);
+        System.out.println("leesCel(51,2):  " + duur);
+
+        int tijd = Excel.tekstNaarTijd("07:45");
+        System.out.println("tijd: " + tijd);
+        uren.schrijfTijdCellen(51, 2, 5, tijd);
+        uren.wisCellen(51, 4, 1);
 
         uren.schrijfTijdCel(52, 2, Excel.tekstNaarTijd("17:30"));
         uren.schrijfWerkboek();
         duur = uren.leesCel(52,2);
-        System.out.println(duur);
+        System.out.println("leesCel(52,2): " + duur);
 
 
     }
@@ -249,7 +259,7 @@ public class testCommonTest extends TestCase{
     public void testVultijd1() {
         // celwaarde * 24 * 60 = minuten
         // minuten / 60 / 24 = celwaarde
-        Excel uren = new Excel("/home/chris/IdeaProjects/uren2013", "CTS45.xls");
+        Excel uren = new Excel(projDir + "uren2013", "CTS45.xls");
         String duur = uren.leesCel(6,2);
         System.out.println(duur);
         duur = uren.leesCel(9,4);
@@ -263,7 +273,7 @@ public class testCommonTest extends TestCase{
 
     @Test
     public void testVulTijd2() {
-        Excel uren = new Excel("/home/chris/IdeaProjects/uren2013", "CTS45.xls");
+        Excel uren = new Excel(projDir + "uren2013", "CTS45.xls");
         String duur = uren.leesCel(61,2);
         System.out.println(duur);
 
@@ -275,5 +285,43 @@ public class testCommonTest extends TestCase{
 
     }
 
+    @Test
+    public void testHostnaam() {
+        String hostnaam = Diversen.hostnaam();
+        if (hostnaam.contains("dc7900")) {
+            System.out.println(hostnaam + " is desktop");
+        } else {
+            System.out.println(hostnaam + " is laptop");
+        }
+
+    }
+
+    @Test
+    public void testBestaatDirFile() {
+
+        if (! Diversen.bestaatPad(projDir)) {
+            System.out.println("dir bestaat niet");
+        } else {
+            System.out.println("dir bestaat ");
+        }
+
+        if (! Diversen.bestaatPad(projDir + "xxx")) {
+            System.out.println("dir bestaat niet");
+        } else {
+            System.out.println("dir bestaat ");
+        }
+
+        if (! Diversen.bestaatPad(projDir + "java/Urenlog/CTS45.xls")) {
+            System.out.println("file bestaat niet");
+        } else {
+            System.out.println("file bestaat ");
+        }
+
+        if (! Diversen.bestaatPad(projDir + "java/Urenlog/CTS66.xls")) {
+            System.out.println("file bestaat niet");
+        } else {
+            System.out.println("file bestaat ");
+        }
+    }
 
 }
