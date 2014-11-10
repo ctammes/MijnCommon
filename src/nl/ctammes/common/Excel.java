@@ -365,7 +365,11 @@ public class Excel {
             minuten = tijdWaarde - uren * 60;
         }
 
-        return String.format("%02d:%02d",uren,minuten);
+        if (uren < 24 && minuten < 60) {
+            return String.format("%02d:%02d", uren, minuten);
+        } else {
+            return "";
+        }
     }
 
     /**
@@ -404,8 +408,8 @@ public class Excel {
     public static int tekstNaarTijd(String tijdTekst) {
         int uren=0, minuten=0;
 
-        if (!tijdTekst.equals("")) {
-            String[] tijd=tijdTekst.split(":");
+        if (isTijdCorrect(tijdTekst)) {
+            String[] tijd=splitsTijd(tijdTekst);
 
             uren=Integer.valueOf(tijd[0]);
             minuten=Integer.valueOf(tijd[1]);
@@ -421,7 +425,7 @@ public class Excel {
      * @return
      */
     public static String[] splitsTijd(String tijdTekst) {
-        if (!tijdTekst.equals("")) {
+        if (isTijdCorrect(tijdTekst)) {
             return tijdTekst.split(":");
         } else {
             return null;
@@ -458,5 +462,20 @@ public class Excel {
         return waarde;
     }
 
+    /**
+     * Controleer of de tijd geldig is
+     * @param tijdTekst (hh:mm)
+     * @return
+     */
+    public static boolean isTijdCorrect(String tijdTekst) {
+        String[] tijd = splitsTijd(tijdTekst);
+        if (tijd.length == 2) {
+            int uren = Integer.valueOf(tijd[0]);
+            int minuten = Integer.valueOf(tijd[1]);
+            return (uren < 24 && minuten < 60);
+        } else {
+            return false;
+        }
+    }
 
 }

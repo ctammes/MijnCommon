@@ -324,4 +324,15 @@ public class testCommonTest extends TestCase{
         }
     }
 
+    @Test
+    public void testIsTijdCorrect() {
+        assertEquals("24:12", false, Excel.isTijdCorrect("24:12"));
+        assertEquals("20:74", false, Excel.isTijdCorrect("20:74"));
+        assertEquals("20:14", true, Excel.isTijdCorrect("20:14"));
+        assertEquals("20-14", false, Excel.isTijdCorrect("20-14"));
+        assertEquals("leeg", false, Excel.isTijdCorrect(""));
+
+    }
+
+
 }
