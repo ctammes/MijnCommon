@@ -425,7 +425,7 @@ public class Excel {
      * @return
      */
     public static String[] splitsTijd(String tijdTekst) {
-        if (isTijdCorrect(tijdTekst)) {
+        if (!tijdTekst.equals("") && tijdTekst.contains(":")) {
             return tijdTekst.split(":");
         } else {
             return null;
