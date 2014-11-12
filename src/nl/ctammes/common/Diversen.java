@@ -21,7 +21,7 @@ public class Diversen {
      * Lees alle filenamen die aan <mask> voldoen uit de opgegeven direcctory
      * (Static, want niet instantie-afhankelijk.)
      * @param dir
-     * @param mask  regex file masker
+     * @param mask  regex file masker in lowercase!
      * @return
      */
     public static String[] leesFileNamen(String dir, String mask) {

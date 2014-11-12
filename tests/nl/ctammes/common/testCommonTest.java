@@ -5,6 +5,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -286,6 +287,12 @@ public class testCommonTest extends TestCase{
     }
 
     @Test
+    public void testTekstNaarTijd() {
+        System.out.println(Excel.tekstNaarTijd("17:30"));
+        System.out.println(Excel.tekstNaarTijd(""));
+    }
+
+    @Test
     public void testHostnaam() {
         String hostnaam = Diversen.hostnaam();
         if (hostnaam.contains("dc7900")) {
@@ -334,5 +341,11 @@ public class testCommonTest extends TestCase{
 
     }
 
+    public void testLeesFilenamen() {
+        // let op: mask in lowercase!!
+        String[] files = Diversen.leesFileNamen("/home/chris/IdeaProjects2/uren2013", "(.*)(\\d{2})\\.xls");
+        System.out.println(files.length);
+
+    }
 
 }

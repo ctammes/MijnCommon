@@ -57,6 +57,13 @@ public class MijnLog {
     public Logger getLog() {
         return log;
     }
+
+    /**
+     * Schrijf een exception
+     */
+    public void exception(Exception ex) {
+        log.severe(String.format("Exception: %s", ex.getMessage()));
+    }
 }
 
 

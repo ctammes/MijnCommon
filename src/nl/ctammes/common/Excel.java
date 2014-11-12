@@ -425,7 +425,7 @@ public class Excel {
      * @return
      */
     public static String[] splitsTijd(String tijdTekst) {
-        if (!tijdTekst.equals("") && tijdTekst.contains(":")) {
+        if (tijdTekst != "" && tijdTekst.contains(":")) {
             return tijdTekst.split(":");
         } else {
             return null;
@@ -469,7 +469,7 @@ public class Excel {
      */
     public static boolean isTijdCorrect(String tijdTekst) {
         String[] tijd = splitsTijd(tijdTekst);
-        if (tijd.length == 2) {
+        if (tijd != null   &&  tijd.length == 2) {
             int uren = Integer.valueOf(tijd[0]);
             int minuten = Integer.valueOf(tijd[1]);
             return (uren < 24 && minuten < 60);
