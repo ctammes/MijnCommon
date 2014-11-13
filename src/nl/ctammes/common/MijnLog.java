@@ -41,7 +41,7 @@ public class MijnLog {
             MijnSimpleFormatter formatterTxt = new MijnSimpleFormatter();
             hand.setFormatter(formatterTxt);
             cons.setFormatter(formatterTxt);
-            // cons.setLevel(Level.OFF);    // geen output naar console
+            cons.setLevel(Level.OFF);    // geen output naar console
 
             log = Logger.getLogger(MijnLog.class.getName());
             log.setUseParentHandlers(false);    // zet default console log uit
