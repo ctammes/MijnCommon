@@ -214,22 +214,40 @@ public class Excel {
     }
 
     /**
+     * Controleer of er een cel is op de aangegeven positie; zo niet, maar die dan aan
+     * @param rij
+     * @param kolom
+     * @return HSSFRow of null bij ongeldige rij/kolom
+     */
+    private HSSFRow prepareCel(int rij, int kolom) {
+        if (rij >=0 && kolom >= 0) {
+            HSSFRow row=werkblad.getRow(rij);
+            if (row == null) {
+                werkblad.createRow(rij);
+                row=werkblad.getRow(rij);
+            }
+            Cell cell = werkblad.getRow(rij).getCell(kolom);
+            if (cell == null) {
+                row.createCell(kolom, Cell.CELL_TYPE_STRING);
+            }
+            return row;
+        } else {
+            // TODO wat doen als invoer fout is?
+            return null;
+        }
+    }
+
+    /**
      * Vul een cel met een tijdwaarde
      * @param rij
      * @param kolom
      * @param waarde
      */
     public void schrijfTijdCel(int rij, int kolom, int waarde) {
-        HSSFRow row=werkblad.getRow(rij);
-        if (row == null) {
-            werkblad.createRow(rij);
-            row=werkblad.getRow(rij);
+        HSSFRow row = prepareCel(rij, kolom);
+        if (row != null) {
+            row.getCell(kolom).setCellValue(minutenNaarNummer(waarde ));
         }
-        Cell cell = row.getCell(kolom);
-        if (cell == null) {
-            row.createCell(kolom, Cell.CELL_TYPE_NUMERIC);
-        }
-        row.getCell(kolom).setCellValue(minutenNaarNummer(waarde ));
     }
 
     /**
@@ -251,7 +269,7 @@ public class Excel {
      * @param aantal
      */
     public void wisCellen(int rij, int kolom, int aantal) {
-        HSSFRow row=werkblad.getRow(rij);
+        HSSFRow row = prepareCel(rij, kolom);
         if (row != null) {
             int i = 0;
             while (i++ < aantal) {
@@ -267,15 +285,10 @@ public class Excel {
      * @param waarde
      */
     public void schrijfCel(int rij, int kolom, String waarde) {
-        HSSFRow row=werkblad.getRow(rij);
-        if (row == null) {
-            werkblad.createRow(rij);
+        HSSFRow row = prepareCel(rij, kolom);
+        if (row != null) {
+            row.getCell(kolom).setCellValue(waarde);
         }
-        Cell cell = werkblad.getRow(rij).getCell(kolom);
-        if (cell == null) {
-            row.createCell(kolom, Cell.CELL_TYPE_STRING);
-        }
-        row.getCell(kolom).setCellValue(waarde);
     }
 
     /**
@@ -298,15 +311,10 @@ public class Excel {
      * @param waarde
      */
     public void schrijfCel(int rij, int kolom, int waarde) {
-        HSSFRow row=werkblad.getRow(rij);
-        if (row == null) {
-            werkblad.createRow(rij);
+        HSSFRow row = prepareCel(rij, kolom);
+        if (row != null) {
+            row.getCell(kolom).setCellValue(waarde);
         }
-        Cell cell = werkblad.getRow(rij).getCell(kolom);
-        if (cell == null) {
-            row.createCell(kolom, Cell.CELL_TYPE_NUMERIC);
-        }
-        row.getCell(kolom).setCellValue(waarde);
     }
 
     /**

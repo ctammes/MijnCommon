@@ -255,6 +255,15 @@ public class testCommonTest extends TestCase{
 
     }
 
+    public void testSchrijfTijdCel() {
+        Excel uren = new Excel(urenlogDir, "CTS45.xls");
+        uren.schrijfTijdCel(61,2,10);
+        uren.schrijfTijdCel(-1,2,10);
+        uren.schrijfWerkboek();
+        uren.sluitWerkboek();
+
+    }
+
     // deze is voor de laptop
     @Test
     public void testVultijd1() {
