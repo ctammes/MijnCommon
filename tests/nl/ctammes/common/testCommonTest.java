@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
  */
 public class testCommonTest extends TestCase{
     private String projDir = "";
+    private String urenlogDir = "";
 
     @Override
     public void setUp() throws Exception {
@@ -30,6 +31,11 @@ public class testCommonTest extends TestCase{
         } else {
             projDir = "/home/chris/IdeaProjects/";
         }
+        urenlogDir = projDir + "java/Urenlog";
+        if (! Diversen.bestaatPad(urenlogDir)) {
+            urenlogDir = projDir + "java/urenlog";
+        }
+
     }
 
     @Test
@@ -136,7 +142,7 @@ public class testCommonTest extends TestCase{
 
     @Test
     public void testExcel2() {
-        Excel uren = new Excel(projDir + "uren2013", "CTS47.xls");
+        Excel uren = new Excel(projDir + "uren2013", "CTS45.xls");
         System.out.println(uren.bestaatWerkblad(0));
     }
 
@@ -150,11 +156,11 @@ public class testCommonTest extends TestCase{
 
     @Test
     public void testCreateNew() {
-        String path = projDir + "uren2013";
+        String path = urenlogDir;
         String file = "CTS99.xls";
         Excel nieuw = new Excel(path, file);
         System.out.println(nieuw.getWerkbladen());
-        assertEquals("Sheet0", nieuw.getWerkbladen().get(0));
+        assertEquals("Blad1", nieuw.getWerkbladen().get(0));
         nieuw.sluitWerkboek();
         File f = new File(path + File.separatorChar + file);
         f.delete();
@@ -169,7 +175,7 @@ public class testCommonTest extends TestCase{
             File nieuw = new File(projDir + "uren2013/CTS99.xls");
             FileUtils.copyFile(oud, nieuw);
 
-            String path = projDir + "uren2013";
+            String path = urenlogDir;
             String file = "CTS99.xls";
             Excel excel = new Excel(path, file);
             excel.schrijfTijdCel(0, 0, 123);
@@ -191,8 +197,8 @@ public class testCommonTest extends TestCase{
         String[] dagen = Diversen.weekDatums(44, 2014);
         assertEquals("begin", "27-10-2014", dagen[0]);
         assertEquals("einde", "02-11-2014", dagen[1]);
-        System.out.println(dagen[0] + " - " + dagen[1]);
-
+        assertEquals("1", dagen[0], "27-10-2014");
+        assertEquals("2", dagen[1], "02-11-2014");
     }
 
     @Test
@@ -208,18 +214,12 @@ public class testCommonTest extends TestCase{
     }
 
     @Test
-    public void testWisCellen() {
-        Excel uren = new Excel(projDir + "java/Urenlog", "CTS45.xls");
-
-    }
-
-    @Test
     public void testVorigeWeekNummer() {
         System.out.println(Diversen.vorigeWeekNummer());
-        assertEquals(1, Diversen.vorigeWeekNummer("03-01-2014"));
-        assertEquals(53, Diversen.vorigeWeekNummer("04-01-2010"));
-        assertEquals(52, Diversen.vorigeWeekNummer("29-12-2009"));
-        assertEquals(1, Diversen.vorigeWeekNummer("01-01-2009"));
+        assertEquals("03-01-2014", 1, Diversen.vorigeWeekNummer("03-01-2014"));
+        assertEquals("04-01-2010", 53, Diversen.vorigeWeekNummer("04-01-2010"));
+        assertEquals("29-12-2009", 52, Diversen.vorigeWeekNummer("29-12-2009"));
+        assertEquals("01-01-2009", 1, Diversen.vorigeWeekNummer("01-01-2009"));
     }
 
     @Test
@@ -231,7 +231,7 @@ public class testCommonTest extends TestCase{
     // deze is voor de desktop
     @Test
     public void testVulTijd() {
-        Excel uren = new Excel(projDir + "java/Urenlog", "CTS45.xls");
+        Excel uren = new Excel(urenlogDir, "CTS45.xls");
         uren.schrijfTijdCel(6,5,10);
 
         // lege tijdcel
@@ -260,7 +260,7 @@ public class testCommonTest extends TestCase{
     public void testVultijd1() {
         // celwaarde * 24 * 60 = minuten
         // minuten / 60 / 24 = celwaarde
-        Excel uren = new Excel(projDir + "uren2013", "CTS45.xls");
+        Excel uren = new Excel(urenlogDir, "CTS45.xls");
         String duur = uren.leesCel(6,2);
         System.out.println(duur);
         duur = uren.leesCel(9,4);
@@ -274,7 +274,7 @@ public class testCommonTest extends TestCase{
 
     @Test
     public void testVulTijd2() {
-        Excel uren = new Excel(projDir + "uren2013", "CTS45.xls");
+        Excel uren = new Excel(urenlogDir, "CTS45.xls");
         String duur = uren.leesCel(61,2);
         System.out.println(duur);
 
@@ -288,8 +288,8 @@ public class testCommonTest extends TestCase{
 
     @Test
     public void testTekstNaarTijd() {
-        System.out.println(Excel.tekstNaarTijd("17:30"));
-        System.out.println(Excel.tekstNaarTijd(""));
+        assertEquals("1050", Excel.tekstNaarTijd("17:30"), 1050);
+        assertEquals("0", Excel.tekstNaarTijd(""),0);
     }
 
     @Test
@@ -306,29 +306,10 @@ public class testCommonTest extends TestCase{
     @Test
     public void testBestaatDirFile() {
 
-        if (! Diversen.bestaatPad(projDir)) {
-            System.out.println("dir bestaat niet");
-        } else {
-            System.out.println("dir bestaat ");
-        }
-
-        if (! Diversen.bestaatPad(projDir + "xxx")) {
-            System.out.println("dir bestaat niet");
-        } else {
-            System.out.println("dir bestaat ");
-        }
-
-        if (! Diversen.bestaatPad(projDir + "java/Urenlog/CTS45.xls")) {
-            System.out.println("file bestaat niet");
-        } else {
-            System.out.println("file bestaat ");
-        }
-
-        if (! Diversen.bestaatPad(projDir + "java/Urenlog/CTS66.xls")) {
-            System.out.println("file bestaat niet");
-        } else {
-            System.out.println("file bestaat ");
-        }
+        assertEquals("1", Diversen.bestaatPad(projDir), true);
+        assertEquals("2", Diversen.bestaatPad(projDir + "xxx"), false);
+        assertEquals("3", Diversen.bestaatPad(urenlogDir + "/CTS45.xls"), true);
+        assertEquals("4", Diversen.bestaatPad(urenlogDir + "/CTS66.xls"), false);
     }
 
     @Test
@@ -341,11 +322,16 @@ public class testCommonTest extends TestCase{
 
     }
 
+    @Test
     public void testLeesFilenamen() {
         // let op: mask in lowercase!!
-        String[] files = Diversen.leesFileNamen("/home/chris/IdeaProjects2/uren2013", "(.*)(\\d{2})\\.xls");
-        System.out.println(files.length);
+        String[] files = Diversen.leesFileNamen(projDir + "/uren2013", "(.*)(\\d{2})(\\.xls)");
+        assertTrue(files.length > 0);
 
     }
 
+    @Test
+    public void testDir() {
+        assertEquals("/home/chris/IdeaProjects/java/MijnCommon", Diversen.pwd());
+    }
 }
