@@ -343,4 +343,12 @@ public class testCommonTest extends TestCase{
     public void testDir() {
         assertEquals("/home/chris/IdeaProjects/java/MijnCommon", Diversen.pwd());
     }
+
+    @Test
+    public void testBerekenTijdverschil() {
+        assertEquals("1", Excel.berekenTijdverschil("12:30", "14:00"), "01:30");
+        assertEquals("1", Excel.berekenTijdverschil("12:30", "1400"), "");
+
+    }
+
 }

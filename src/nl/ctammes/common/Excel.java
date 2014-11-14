@@ -486,4 +486,24 @@ public class Excel {
         }
     }
 
+    /**
+     * Berekent het verschil tussen twee tijdstippen
+     * @param tijdTekst1 (hh:mm)
+     * @param tijdTekst2 (hh:mm)
+     * @return (hh:mm) leeg bij foute invoer
+     */
+    public static String berekenTijdverschil(String tijdTekst1, String tijdTekst2) {
+        int tijd1 = tekstNaarTijd(tijdTekst1);
+        int tijd2 = tekstNaarTijd(tijdTekst2);
+        String result = "";
+        if (tijd1 == 0 || tijd2 == 0) {
+            return "";
+        } else if (tijd1 > tijd2) {
+            result = tijdNaarTekst(tijd1 - tijd2);
+        } else {
+            result = tijdNaarTekst(tijd2 - tijd1);
+        }
+        return result;
+    }
+
 }
