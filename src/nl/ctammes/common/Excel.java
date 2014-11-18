@@ -434,10 +434,21 @@ public class Excel {
      */
     public static String[] splitsTijd(String tijdTekst) {
         if (tijdTekst != "" && tijdTekst.contains(":")) {
+//            String tijd = tijdTekst.split(":");
+
             return tijdTekst.split(":");
         } else {
             return null;
         }
+    }
+
+    public static String formatTijd(String tijdTekst) {
+        String result = "";
+        if (tijdTekst != "" && tijdTekst.contains(":")) {
+            String[] tijd = tijdTekst.split(":");
+            result = String.format("%02d:%02d", Integer.parseInt(tijd[0]), Integer.parseInt(tijd[1]));
+        }
+        return result;
     }
 
     /**
@@ -492,7 +503,7 @@ public class Excel {
      * @param tijdTekst2 (hh:mm)
      * @return (hh:mm) leeg bij foute invoer
      */
-    public static String berekenTijdverschil(String tijdTekst1, String tijdTekst2) {
+    public static String berekenTijdVerschil(String tijdTekst1, String tijdTekst2) {
         int tijd1 = tekstNaarTijd(tijdTekst1);
         int tijd2 = tekstNaarTijd(tijdTekst2);
         String result = "";
@@ -506,4 +517,14 @@ public class Excel {
         return result;
     }
 
+    public static String berekenTijdSom(String tijdTekst1, String tijdTekst2) {
+        int tijd1 = tekstNaarTijd(tijdTekst1);
+        int tijd2 = tekstNaarTijd(tijdTekst2);
+        String result = "";
+        if (tijd1 == 0 || tijd2 == 0) {
+            return "";
+        }
+        result = tijdNaarTekst(tijd1 + tijd2);
+        return result;
+    }
 }

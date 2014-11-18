@@ -5,7 +5,6 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -323,11 +322,17 @@ public class testCommonTest extends TestCase{
 
     @Test
     public void testIsTijdCorrect() {
+        assertEquals("12:30", Excel.formatTijd("12:30"), "12:30");
+        assertEquals("2:30", Excel.formatTijd("2:30"), "02:30");
+        assertEquals(":30", Excel.formatTijd(":30"), "00:30");
+
         assertEquals("24:12", false, Excel.isTijdCorrect("24:12"));
         assertEquals("20:74", false, Excel.isTijdCorrect("20:74"));
         assertEquals("20:14", true, Excel.isTijdCorrect("20:14"));
         assertEquals("20-14", false, Excel.isTijdCorrect("20-14"));
-        assertEquals("leeg", false, Excel.isTijdCorrect(""));
+        assertEquals("0:30", true, Excel.isTijdCorrect("0:30"));
+//        assertEquals(":30", true, Excel.isTijdCorrect(":30"));
+//        assertEquals("leeg", false, Excel.isTijdCorrect(""));
 
     }
 
@@ -345,10 +350,20 @@ public class testCommonTest extends TestCase{
     }
 
     @Test
-    public void testBerekenTijdverschil() {
-        assertEquals("1", Excel.berekenTijdverschil("12:30", "14:00"), "01:30");
-        assertEquals("1", Excel.berekenTijdverschil("12:30", "1400"), "");
+    public void testBerekenTijdVerschil() {
+        assertEquals("1", Excel.berekenTijdVerschil("12:30", "14:00"), "01:30");
+        assertEquals("1", Excel.berekenTijdVerschil("8:30", "10:00"), "01:30");
+        assertEquals("2", Excel.berekenTijdVerschil("12:30", "1400"), "");
+        assertEquals("3", Excel.berekenTijdVerschil("12:30", "1400"), "");
 
     }
 
+    @Test
+    public void testBerekenSom() {
+        assertEquals("1", Excel.berekenTijdSom("02:30", "00:45"), "03:15");
+        assertEquals("1", Excel.berekenTijdSom("2:30", "0:45"), "03:15");
+        assertEquals("2", Excel.berekenTijdSom("12:30", "1400"), "");
+        assertEquals("3", Excel.berekenTijdSom("01:39", "00:24"), "02:03");
+
+    }
 }
