@@ -256,9 +256,21 @@ public class testCommonTest extends TestCase{
 
     public void testSchrijfTijdCel() {
         Excel uren = new Excel(urenlogDir, "CTS45.xls");
-        uren.schrijfTijdCel(61,2,10);
+        uren.schrijfTijdCel(26,2,10);
+        uren.schrijfWerkboek();
+        assertEquals("10", "10.0", uren.leesCel(26,2));
+
+        uren.schrijfTijdCel(26,2,70);
+        uren.schrijfWerkboek();
+        assertEquals("70", "70.0", uren.leesCel(26,2));
+
         uren.schrijfTijdCel(-1,2,10);
         uren.schrijfWerkboek();
+        assertEquals("fout", "70.0", uren.leesCel(26,2)); // ongeldige rij, dus vorige waarde!
+
+        uren.schrijfTijdCel(26,2,0);
+        uren.schrijfWerkboek();
+        assertEquals("leeg", "", uren.leesCel(26,2));
         uren.sluitWerkboek();
 
     }
@@ -325,14 +337,16 @@ public class testCommonTest extends TestCase{
         assertEquals("12:30", Excel.formatTijd("12:30"), "12:30");
         assertEquals("2:30", Excel.formatTijd("2:30"), "02:30");
         assertEquals(":30", Excel.formatTijd(":30"), "00:30");
+        assertEquals("1:3", Excel.formatTijd("1:3"), "01:03");
+        assertEquals("1:", Excel.formatTijd("1:"), "01:00");
 
         assertEquals("24:12", false, Excel.isTijdCorrect("24:12"));
         assertEquals("20:74", false, Excel.isTijdCorrect("20:74"));
         assertEquals("20:14", true, Excel.isTijdCorrect("20:14"));
         assertEquals("20-14", false, Excel.isTijdCorrect("20-14"));
         assertEquals("0:30", true, Excel.isTijdCorrect("0:30"));
-//        assertEquals(":30", true, Excel.isTijdCorrect(":30"));
-//        assertEquals("leeg", false, Excel.isTijdCorrect(""));
+        assertEquals(":30", true, Excel.isTijdCorrect(":30"));
+        assertEquals("leeg", false, Excel.isTijdCorrect(""));
 
     }
 
@@ -361,9 +375,9 @@ public class testCommonTest extends TestCase{
     @Test
     public void testBerekenSom() {
         assertEquals("1", Excel.berekenTijdSom("02:30", "00:45"), "03:15");
-        assertEquals("1", Excel.berekenTijdSom("2:30", "0:45"), "03:15");
-        assertEquals("2", Excel.berekenTijdSom("12:30", "1400"), "");
-        assertEquals("3", Excel.berekenTijdSom("01:39", "00:24"), "02:03");
+        assertEquals("2", Excel.berekenTijdSom("2:30", "0:45"), "03:15");
+        assertEquals("3", Excel.berekenTijdSom("12:30", "1400"), "");
+        assertEquals("4", Excel.berekenTijdSom("01:39", "00:24"), "02:03");
 
     }
 }

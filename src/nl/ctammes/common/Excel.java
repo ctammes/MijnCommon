@@ -228,7 +228,7 @@ public class Excel {
             }
             Cell cell = werkblad.getRow(rij).getCell(kolom);
             if (cell == null) {
-                row.createCell(kolom, Cell.CELL_TYPE_STRING);
+                row.createCell(kolom, HSSFCell.CELL_TYPE_STRING);
             }
             return row;
         } else {
@@ -241,12 +241,16 @@ public class Excel {
      * Vul een cel met een tijdwaarde
      * @param rij
      * @param kolom
-     * @param waarde
+     * @param waarde (minuten)
      */
     public void schrijfTijdCel(int rij, int kolom, int waarde) {
         HSSFRow row = prepareCel(rij, kolom);
         if (row != null) {
-            row.getCell(kolom).setCellValue(minutenNaarNummer(waarde ));
+            if (waarde == 0) {
+                row.getCell(kolom).setCellType(HSSFCell.CELL_TYPE_BLANK);
+            } else {
+                row.getCell(kolom).setCellValue(minutenNaarNummer(waarde ));
+            }
         }
     }
 
@@ -254,7 +258,7 @@ public class Excel {
      * Vul een reeks cel met een identieke tijdwaarde
      * @param rij
      * @param kolom
-     * @param waarde
+     * @param waarde (minuten)
      */
     public void schrijfTijdCellen(int rij, int kolom, int aantal, int waarde) {
         for (int i = 0; i < aantal; i++) {
@@ -312,7 +316,9 @@ public class Excel {
      */
     public void schrijfCel(int rij, int kolom, int waarde) {
         HSSFRow row = prepareCel(rij, kolom);
-        if (row != null) {
+        if (waarde == 0) {
+            row.getCell(kolom).setCellType(HSSFCell.CELL_TYPE_BLANK);
+        } else {
             row.getCell(kolom).setCellValue(waarde);
         }
     }
@@ -433,20 +439,28 @@ public class Excel {
      * @return
      */
     public static String[] splitsTijd(String tijdTekst) {
-        if (tijdTekst != "" && tijdTekst.contains(":")) {
-//            String tijd = tijdTekst.split(":");
-
-            return tijdTekst.split(":");
+        if (! tijdTekst.equals("") && tijdTekst.contains(":")) {
+            return formatTijd(tijdTekst).split(":");
         } else {
             return null;
         }
     }
 
+    /**
+     * Formatteer een tijd (hh:mm) inclusief voorloopnullen
+     * @param tijdTekst (hh:mm)
+     * @return (hh:mm)
+     */
     public static String formatTijd(String tijdTekst) {
         String result = "";
-        if (tijdTekst != "" && tijdTekst.contains(":")) {
+        if (! tijdTekst.equals("") && tijdTekst.contains(":")) {
             String[] tijd = tijdTekst.split(":");
-            result = String.format("%02d:%02d", Integer.parseInt(tijd[0]), Integer.parseInt(tijd[1]));
+            int uur = tijd[0].equals("") ? 0 : Integer.parseInt(tijd[0]);
+            int min = 0;
+            if (tijd.length == 2) {
+                min = tijd[1].equals("") ? 0 : Integer.parseInt(tijd[1]);
+            }
+            result = String.format("%02d:%02d", uur, min);
         }
         return result;
     }
@@ -517,6 +531,12 @@ public class Excel {
         return result;
     }
 
+    /**
+     * Berekent de som van twee tijdstippen
+     * @param tijdTekst1 (hh:mm)
+     * @param tijdTekst2 (hh:mm)
+     * @return (hh:mm) leeg bij foute invoer
+     */
     public static String berekenTijdSom(String tijdTekst1, String tijdTekst2) {
         int tijd1 = tekstNaarTijd(tijdTekst1);
         int tijd2 = tekstNaarTijd(tijdTekst2);
