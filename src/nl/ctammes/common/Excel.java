@@ -10,10 +10,7 @@ package nl.ctammes.common;/*
  * Zie ook: http://poi.apache.org/spreadsheet/quick-guide.html#NewWorkbook
  */
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Workbook;
 
@@ -228,7 +225,7 @@ public class Excel {
             }
             Cell cell = werkblad.getRow(rij).getCell(kolom);
             if (cell == null) {
-                row.createCell(kolom, Cell.CELL_TYPE_STRING);
+                row.createCell(kolom, HSSFCell.CELL_TYPE_STRING);
             }
             return row;
         } else {
@@ -241,12 +238,16 @@ public class Excel {
      * Vul een cel met een tijdwaarde
      * @param rij
      * @param kolom
-     * @param waarde
+     * @param waarde (minuten)
      */
     public void schrijfTijdCel(int rij, int kolom, int waarde) {
         HSSFRow row = prepareCel(rij, kolom);
         if (row != null) {
-            row.getCell(kolom).setCellValue(minutenNaarNummer(waarde ));
+            if (waarde == 0) {
+                row.getCell(kolom).setCellType(HSSFCell.CELL_TYPE_BLANK);
+            } else {
+                row.getCell(kolom).setCellValue(minutenNaarNummer(waarde ));
+            }
         }
     }
 
@@ -254,7 +255,7 @@ public class Excel {
      * Vul een reeks cel met een identieke tijdwaarde
      * @param rij
      * @param kolom
-     * @param waarde
+     * @param waarde (minuten)
      */
     public void schrijfTijdCellen(int rij, int kolom, int aantal, int waarde) {
         for (int i = 0; i < aantal; i++) {
@@ -313,7 +314,11 @@ public class Excel {
     public void schrijfCel(int rij, int kolom, int waarde) {
         HSSFRow row = prepareCel(rij, kolom);
         if (row != null) {
-            row.getCell(kolom).setCellValue(waarde);
+            if (waarde == 0) {
+                row.getCell(kolom).setCellType(HSSFCell.CELL_TYPE_BLANK);
+            } else {
+                row.getCell(kolom).setCellValue(waarde);
+            }
         }
     }
 

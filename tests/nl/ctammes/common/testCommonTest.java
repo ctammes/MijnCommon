@@ -256,9 +256,21 @@ public class testCommonTest extends TestCase{
 
     public void testSchrijfTijdCel() {
         Excel uren = new Excel(urenlogDir, "CTS45.xls");
-        uren.schrijfTijdCel(61,2,10);
+        uren.schrijfTijdCel(26,2,10);
+        uren.schrijfWerkboek();
+        assertEquals("10", "10.0", uren.leesCel(26,2));
+
+        uren.schrijfTijdCel(26,2,70);
+        uren.schrijfWerkboek();
+        assertEquals("70", "70.0", uren.leesCel(26,2));
+
         uren.schrijfTijdCel(-1,2,10);
         uren.schrijfWerkboek();
+        assertEquals("fout", "70.0", uren.leesCel(26,2));   // ongeldige rij, dus vorige waarde!
+
+        uren.schrijfTijdCel(26,2,0);
+        uren.schrijfWerkboek();
+        assertEquals("leeg", "", uren.leesCel(26,2));
         uren.sluitWerkboek();
 
     }
