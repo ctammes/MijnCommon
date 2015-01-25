@@ -22,6 +22,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 /**
  *
@@ -37,6 +38,8 @@ public class Excel {
     private int regelTm = 0;        // laatste dataregel
     private HSSFWorkbook werkboek;  // werkboek
     private HSSFSheet werkblad;     // werkblad
+
+    private Logger log;
 
     public Excel() {
     }
@@ -64,6 +67,10 @@ public class Excel {
         } catch(Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public void setLog(Logger log) {
+        this.log = log;
     }
 
     public FileInputStream getSheetPath() {
@@ -294,6 +301,10 @@ public class Excel {
             werkblad.removeRow(row);
             werkblad.shiftRows(rij + 1, werkblad.getLastRowNum(), -1);
             schrijfWerkboek();
+            if (log != null) {
+                log.info(String.format("rij %d verwijderd", rij));
+            }
+
         }
     }
 

@@ -27,6 +27,7 @@ public class Sqlite {
         this.sqliteDb = db;
     }
 
+    // TODO log gelijktrekken met Excel
     public Sqlite(String dir, String db, Logger log) {
         this.sqliteDir = dir;
         this.sqliteDb = db;
