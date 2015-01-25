@@ -77,6 +77,8 @@ public class testCommonTest extends TestCase{
     public void testWeekdagnr() {
         System.out.println(Diversen.weekdagNummer());
         System.out.println(Diversen.weekdagNummer("31-10-2014"));
+        System.out.println(Diversen.weekdagNummer("01-11-2014"));   // zaterdag
+        System.out.println(Diversen.weekdagNummer("02-11-2014"));   // zondag
     }
 
     @Test
@@ -224,6 +226,7 @@ public class testCommonTest extends TestCase{
     @Test
     public void testWeekdagNaamKort() {
         assertEquals("do", Diversen.weekdagNaamKort("06-11-2014"));
+        assertEquals("zo", Diversen.weekdagNaamKort("02-11-2014"));
         assertEquals("zaterdag", Diversen.weekdagNaamLang("08-11-2014"));
     }
 

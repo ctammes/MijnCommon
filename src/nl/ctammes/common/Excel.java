@@ -39,7 +39,7 @@ public class Excel {
     private HSSFWorkbook werkboek;  // werkboek
     private HSSFSheet werkblad;     // werkblad
 
-    private Logger log;
+    protected Logger log;
 
     public Excel() {
     }

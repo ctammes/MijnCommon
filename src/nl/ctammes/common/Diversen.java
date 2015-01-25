@@ -119,7 +119,9 @@ public class Diversen {
     public static int weekdagNummer() {
         Calendar nu=Calendar.getInstance();
         nu.setFirstDayOfWeek(Calendar.MONDAY);
-        return nu.get(Calendar.DAY_OF_WEEK);
+        int dag = nu.get(Calendar.DAY_OF_WEEK);
+        // let op: zondag is 1 en in het sheet 8
+        return (dag == 1 ? 8 : dag);
     }
 
     /**
@@ -130,7 +132,9 @@ public class Diversen {
     public static int weekdagNummer(String datum) {
         Calendar cal = maakDatum(datum);
         cal.setFirstDayOfWeek(Calendar.MONDAY);
-        return cal.get(Calendar.DAY_OF_WEEK);
+        int dag = cal.get(Calendar.DAY_OF_WEEK);
+        // let op: zondag is 1 en in het sheet 8
+        return (dag == 1 ? 8 : dag);
 
     }
 
