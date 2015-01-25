@@ -7,7 +7,7 @@ package nl.ctammes.common;/*
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.
  *
- * Zie ook: http://poi.apache.org/spreadsheet/quick-guide.html#NewWorkbook
+ * Zie ook: http://poi.apache.org/spreadsheet/quick-guide.html
  */
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -109,6 +109,7 @@ public class Excel {
         try {
             FileOutputStream fileOut = new FileOutputStream(sheetFullName);
             getWerkboek().write(fileOut);
+            fileOut.close();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -121,6 +122,7 @@ public class Excel {
         try {
             FileOutputStream fileOut = new FileOutputStream(sheetFullName);
             getWerkboek().write(fileOut);
+            fileOut.close();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -279,6 +281,19 @@ public class Excel {
             while (i++ < aantal) {
                 row.getCell(kolom++).setCellType(HSSFCell.CELL_TYPE_BLANK);
             }
+        }
+    }
+
+    /**
+     * Wist een rij uit het werkblad
+     * @param rij
+     */
+    public void wisRij(int rij) {
+        if (rij >= 0) {
+            HSSFRow row = werkblad.getRow(rij);
+            werkblad.removeRow(row);
+            werkblad.shiftRows(rij + 1, werkblad.getLastRowNum(), -1);
+            schrijfWerkboek();
         }
     }
 
