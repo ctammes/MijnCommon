@@ -112,6 +112,7 @@ public class Excel {
      */
     public void schrijfWerkboek() {
         try {
+            herberekenWerkblad();
             FileOutputStream fileOut = new FileOutputStream(sheetFullName);
             getWerkboek().write(fileOut);
             fileOut.close();
