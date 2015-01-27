@@ -2,12 +2,17 @@ package nl.ctammes.common;
 
 import junit.framework.TestCase;
 import org.apache.commons.io.FileUtils;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.junit.Test;
 
 import java.io.File;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -383,4 +388,106 @@ public class testCommonTest extends TestCase{
         assertEquals("4", Excel.berekenTijdSom("01:39", "00:24"), "02:03");
 
     }
+
+    @Test
+    public void testCellType() {
+        // http://apache-poi.1045710.n5.nabble.com/HSSF-formula-cells-not-calculating-td2297567.html
+        Excel uren = new Excel(urenlogDir, "CTS45.xls");
+
+        CreationHelper createHelper = uren.getWerkboek().getCreationHelper();
+        CellStyle cellStyle = uren.getWerkboek().createCellStyle();
+        cellStyle.setDataFormat(createHelper.createDataFormat().getFormat("hh:mm"));
+
+        int rij = 39;
+        HSSFRow row=uren.getWerkblad().getRow(rij);
+        if (row != null) {
+            for (int kolom = 0; kolom < row.getLastCellNum(); kolom++) {
+                Cell cell = uren.getWerkblad().getRow(rij).getCell(kolom);
+//                cell.setCellStyle(cellStyle);
+                CellStyle x = cell.getCellStyle();
+                System.out.printf("%d: %d %s\n", kolom, cell.getCellType(), cell.getCellStyle().getDataFormat());
+            }
+
+            rij = 38;
+            row=uren.getWerkblad().getRow(rij);
+            if (row != null) {
+                for (int kolom = 0; kolom < row.getLastCellNum(); kolom++) {
+                    Cell cell = uren.getWerkblad().getRow(rij).getCell(kolom);
+                    cell.setCellStyle(cellStyle);
+                }
+            }
+
+        }
+
+    }
+
+    @Test
+    public void testRecalculate() {
+        Excel uren = new Excel(urenlogDir, "CTS45.xls");
+
+        HSSFWorkbook wb = uren.getWerkboek();
+        HSSFSheet sheet = uren.getWerkblad();
+
+        // lege cel vullen met nieuwe waarde
+        double tijd = sheet.getRow(32).getCell(3).getNumericCellValue();
+        HSSFRow row = sheet.getRow(38);
+        Cell cell = row.getCell(3);
+        if (cell == null) {
+            row.createCell(3, HSSFCell.CELL_TYPE_NUMERIC);
+        }
+//        cell.setCellValue(tijd);
+        cell.setCellValue(Excel.minutenNaarNummer(43));
+
+        // alle formules herberekenen
+        HSSFFormulaEvaluator evaluator = new HSSFFormulaEvaluator(sheet, wb);
+        for (Iterator rit = sheet.rowIterator(); rit.hasNext();)
+        {
+            row = (HSSFRow) rit.next();
+//            evaluator.setCurrentRow(row);
+            for (Iterator cit = row.cellIterator(); cit.hasNext();)
+            {
+                cell = (HSSFCell) cit.next();
+                if (cell != null && cell.getCellType() == HSSFCell.CELL_TYPE_FORMULA)
+                {
+                    String formula = cell.getCellFormula();
+                    if (formula != null)
+                    {
+                        System.out.printf("%d %d %s\n", row.getRowNum(), cell.getColumnIndex(), formula);
+                        evaluator.evaluateFormulaCell(cell);
+                        cell.setCellFormula (formula); // ADD THIS OR IT WON'T RECALC
+                    }
+                }
+            }
+        }
+        uren.schrijfWerkboek();
+        uren.sluitWerkboek();
+    }
+
+    @Test
+    public void testRecalculate_1() {
+
+        Excel uren = new Excel(urenlogDir, "CTS45.xls");
+
+        HSSFWorkbook wb = uren.getWerkboek();
+        HSSFSheet sheet = uren.getWerkblad();
+
+        // lege cel vullen met nieuwe waarde
+        double tijd = sheet.getRow(32).getCell(3).getNumericCellValue();
+        HSSFRow row = sheet.getRow(38);
+        Cell cell = row.getCell(3);
+        if (cell == null) {
+            row.createCell(3, HSSFCell.CELL_TYPE_NUMERIC);
+        }
+//        cell.setCellValue(tijd);
+        cell.setCellValue(Excel.minutenNaarNummer(47));
+
+        uren.herberekenWerkblad();
+
+        uren.schrijfWerkboek();
+        uren.sluitWerkboek();
+
+    }
+
+
+
 }

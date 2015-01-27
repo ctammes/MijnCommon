@@ -10,10 +10,7 @@ package nl.ctammes.common;/*
  * Zie ook: http://poi.apache.org/spreadsheet/quick-guide.html
  */
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Workbook;
 
@@ -22,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.logging.Logger;
 
 /**
@@ -113,19 +111,6 @@ public class Excel {
      * Sla het spreadsheet bestand op
      */
     public void schrijfWerkboek() {
-        try {
-            FileOutputStream fileOut = new FileOutputStream(sheetFullName);
-            getWerkboek().write(fileOut);
-            fileOut.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    /**
-     * Herberekenen na aanpassen (hoe??)
-     */
-    public void herberekenWerkboek() {
         try {
             FileOutputStream fileOut = new FileOutputStream(sheetFullName);
             getWerkboek().write(fileOut);
@@ -237,7 +222,7 @@ public class Excel {
             }
             Cell cell = werkblad.getRow(rij).getCell(kolom);
             if (cell == null) {
-                row.createCell(kolom, HSSFCell.CELL_TYPE_STRING);
+                row.createCell(kolom, HSSFCell.CELL_TYPE_BLANK);
             }
             return row;
         } else {
@@ -389,6 +374,33 @@ public class Excel {
         }
         return waarde;
 
+    }
+
+    /**
+     * Herbereken het werkblad
+     * Doorloop alle cellen en herberelen iedere formule
+     *
+     * http://apache-poi.1045710.n5.nabble.com/HSSF-formula-cells-not-calculating-td2297567.html
+     */
+    public void herberekenWerkblad() {
+
+        HSSFFormulaEvaluator evaluator = new HSSFFormulaEvaluator(werkblad, werkboek);
+
+        for (Iterator rit = werkblad.rowIterator(); rit.hasNext(); ) {
+            HSSFRow row = (HSSFRow) rit.next();
+            for (Iterator cit = row.cellIterator(); cit.hasNext(); ) {
+                HSSFCell cell = (HSSFCell) cit.next();
+                if (cell != null && cell.getCellType() == HSSFCell.CELL_TYPE_FORMULA) {
+                    String formula = cell.getCellFormula();
+                    if (formula != null) {
+                        evaluator.evaluateFormulaCell(cell);
+                        cell.setCellFormula(formula); // ADD THIS OR IT WON'T RECALC
+                    }
+                }
+            }
+        }
+//        schrijfWerkboek();
+//        sluitWerkboek();
     }
 
     /**
