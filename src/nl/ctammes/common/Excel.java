@@ -552,17 +552,16 @@ public class Excel {
 
     /**
      * Berekent het verschil tussen twee tijdstippen
+     * Een van beide mag leeg zijn om een decimale waarde te kunnen bepalen.
      * @param tijdTekst1 (hh:mm)
      * @param tijdTekst2 (hh:mm)
      * @return (hh:mm) leeg bij foute invoer
      */
     public static String berekenTijdVerschil(String tijdTekst1, String tijdTekst2) {
-        int tijd1 = tekstNaarTijd(tijdTekst1);
-        int tijd2 = tekstNaarTijd(tijdTekst2);
+        int tijd1 = tekstNaarTijd(tijdTekst1.trim());
+        int tijd2 = tekstNaarTijd(tijdTekst2.trim());
         String result = "";
-        if (tijd1 == 0 || tijd2 == 0) {
-            return "";
-        } else if (tijd1 > tijd2) {
+        if (tijd1 > tijd2) {
             result = tijdNaarTekst(tijd1 - tijd2);
         } else {
             result = tijdNaarTekst(tijd2 - tijd1);
@@ -572,17 +571,15 @@ public class Excel {
 
     /**
      * Berekent de som van twee tijdstippen
+     * Een van beide mag leeg zijn om een decimale waarde te kunnen bepalen.
      * @param tijdTekst1 (hh:mm)
      * @param tijdTekst2 (hh:mm)
      * @return (hh:mm) leeg bij foute invoer
      */
     public static String berekenTijdSom(String tijdTekst1, String tijdTekst2) {
-        int tijd1 = tekstNaarTijd(tijdTekst1);
-        int tijd2 = tekstNaarTijd(tijdTekst2);
+        int tijd1 = tekstNaarTijd(tijdTekst1.trim());
+        int tijd2 = tekstNaarTijd(tijdTekst2.trim());
         String result = "";
-        if (tijd1 == 0 || tijd2 == 0) {
-            return "";
-        }
         result = tijdNaarTekst(tijd1 + tijd2);
         return result;
     }
