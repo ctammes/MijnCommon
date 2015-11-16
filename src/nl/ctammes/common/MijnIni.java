@@ -61,6 +61,22 @@ public class MijnIni {
     }
 
     /**
+     * Lees waarde uit sleutel in sectie
+     * @param section
+     * @param key
+     * @param def   default waarde
+     * @return
+     */
+    public String lees(String section, String key, String def) {
+
+        String value = lees(section, key);
+        if (value == null) {
+            value = def;
+        }
+        return value;
+    }
+
+    /**
      * Schrijf waarde naar sleutel in sectie
      * @param section
      * @param key
