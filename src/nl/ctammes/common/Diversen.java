@@ -205,14 +205,40 @@ public class Diversen {
 
     }
 
+    /**
+     * Geef datum van vandaag (dd-mm-jjjj)
+     * @return
+     */
     public static String vandaag() {
         return vandaag("dd-MM-yyyy");
     }
 
+    /**
+     * Geef datum van vandaag in opgegeven formaat
+     * @param format gewenst output formaat
+     * @return
+     */
     public static String vandaag(String format) {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         Calendar cal = Calendar.getInstance();
         return sdf.format(cal.getTime());
+    }
+
+    /**
+     * Geef datum in opgegeven formaat
+     * @oaram datum datum als dd-mm-jjjj
+     * @param format gewenst output formaat
+     * @return
+     */
+    public static String datumFormat(String datum, String format) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            Date date = sdf.parse(datum);
+            sdf = new SimpleDateFormat(format);
+            return sdf.format(date);
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     /**

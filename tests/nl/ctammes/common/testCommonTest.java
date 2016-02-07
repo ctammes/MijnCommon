@@ -47,9 +47,12 @@ public class testCommonTest extends TestCase{
         MijnIni ini = new MijnIni("test.ini");
         ini.schrijf("sectie", "item1", "waarde1");
         ini.schrijf("sectie", "item2", "waarde2");
+        ini.schrijf("sectie", "item3", "123,456");
 
 //        System.out.println(ini.lees("sectie", "item2"));
         assertEquals("waarde2", ini.lees("sectie", "item2"));
+        assertEquals("123,456", ini.lees("sectie", "item3", "200,200"));
+        assertEquals("waardeX", ini.lees("sectie", "item9", "waardeX"));
     }
 
     @Test
@@ -98,6 +101,15 @@ public class testCommonTest extends TestCase{
     public void testVandaag() {
         System.out.println(Diversen.vandaag());
         System.out.println(Diversen.vandaag("yyyy-MM-dd"));
+        System.out.println(Diversen.vandaag("EEEE dd-MM-yyyy"));
+    }
+
+
+    @Test
+    public void testDatum() {
+        System.out.println(Diversen.vandaag());
+        System.out.println(Diversen.datumFormat(Diversen.vandaag(), "yyyy-MM-dd"));
+        System.out.println(Diversen.datumFormat(Diversen.vandaag(), "EEEE dd-MM-yyyy"));
     }
 
     @Test
